@@ -7,6 +7,8 @@ from src.skills.execucao import ExecucaoSkill
 from src.modulos.core.estilo import EstiloMódulo
 from src.modulos.core.seguranca import SegurancaMódulo
 from src.modulos.core.contexto import ContextoMódulo
+# --- NOVA LINHA ABAIXO ---
+from src.modulos.core.sandbox import SandboxMódulo
 
 class OrchestratorAeris:
     def __init__(self):
@@ -14,6 +16,9 @@ class OrchestratorAeris:
         self.estilo = EstiloMódulo()
         self.seguranca = SegurancaMódulo()
         self.contexto = ContextoMódulo(self)
+        # --- NOVA LINHA ABAIXO ---
+        self.sandbox = SandboxMódulo(self)
+        
         self.diretorio_modulos = "src/modulos/"
         self.estado = "BASE"
         self.__salt = os.getenv('AERIS_SALT', '') 
@@ -51,7 +56,7 @@ class OrchestratorAeris:
         partes = comando.split()
         if not partes: return None, None, None
         trigger_input = partes[0].lower()
-        argumentos = " ".join(partes[1:]) # Captura tudo após o 'calc'
+        argumentos = " ".join(partes[1:])
         
         try:
             conn = self.conectar_db()
@@ -93,7 +98,6 @@ class OrchestratorAeris:
         
         if skill:
             try:
-                # Agora passamos os argumentos capturados para a Skill
                 resultado = skill.executar(argumentos)
                 return self.estilo.formatar_saida(resultado, "MESTRE"), None
             except Exception as e:
