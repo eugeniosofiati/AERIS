@@ -1,6 +1,6 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v1.8.5 (Calculator Persistence & State Integration Homologated)  
+**Documento de Referência:** v1.9.0 (Garbage Collector & Timezone Sync Homologated)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
 **Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação. Se o assistente perder o contexto, o conteúdo anterior deve ser reenviado pelo usuário para reintegração.
 
@@ -15,14 +15,14 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 3. **Skills:** Interfaces de habilidades funcionais (ex: Execução de Scripts).
 4. **Sub-skills:** Unidades técnicas atômicas (ex: Sanitização de comandos, Validação de sintaxe).
 
-### 🛡️ Blindagem de Soberania (v1.8.5+):
+### 🛡️ Blindagem de Soberania (v1.9.0+):
 * **Core (Cérebro Fixo):** Estilo, Segurança, Contexto, Auditoria, QA de Saída e Gatekeeper.
 * **Integridade Dinâmica:** Validação SHA-256 via Salt injetado por Variável de Ambiente (`AERIS_SALT`).
-* **Memória Permanente:** Camada de Persistência criptografada (AES-256) via MySQL em `contexto_persistente`.
-* **Motor de Parsing:** Sistema de captura de argumentos pós-gatilho funcional.
-* **Sandbox de Criação:** Validação de sintaxe via `ast.parse` integrada ao Orquestrador (v1.8.0).
-* **Resiliência de Escrita:** Homologação de permissões via `sudo` para manutenção de módulos core (v1.8.1).
-* **Cálculo com Estado:** Skill Calculadora integrada à Camada de Persistência para variáveis persistentes (v1.8.5).
+* **Memória Permanente:** Camada de Persistência criptografada (AES-256) via MySQL.
+* **Garbage Collector (GC):** Remoção física de registros expirados via `UTC_TIMESTAMP()` (v1.9.0).
+* **Sincronização Temporal:** Padronização integral em UTC para evitar derivas de fuso horário (v1.9.0).
+* **Sandbox de Criação:** Validação de sintaxe via `ast.parse` integrada ao Orquestrador.
+* **Resiliência de Escrita:** Homologação de permissões via `sudo` para manutenção de módulos core.
 
 ---
 
@@ -54,6 +54,8 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DEV] Core de Contexto:** Gestão de memórias encriptadas operacional.
 - [x] **[DBA] Modelagem Relacional:** Tabelas `usuarios_autorizados` e `contexto_persistente` (v1.7.5) criadas.
 - [x] **[DEV] Camada de Persistência:** Implementação de CRUD com AES-256 em `contexto.py` homologada.
+- [x] **[DBA] Expiração de Dados:** Coluna `expira_em` e lógica de UTC integrada (v1.9.0).
+- [x] **[DEV] Garbage Collector:** Função de limpeza física homologada (v1.9.0).
 
 ### [FASE 3] O AGENTE & PIPELINE DE EXECUÇÃO (O Cérebro)
 - [x] **[DEV] Skill de Execução & Sub-skill de Sanitização:** Integrada.
@@ -74,7 +76,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DEV] Módulo Criador (Base):** Fábrica de escrita de arquivos `.py`.
 - [x] **[DEV] Skill Calculadora (v1.7.0):** Primeira skill dinâmica homologada com argumentos.
 - [x] **[DEV] Sandbox de Criação:** Validação de sintaxe via AST homologada (v1.8.0).
-- [x] **[DEV] Fluxo de Criação Dinâmica:** Skill 'senha' (PassGen) integrada, depurada e funcional (v1.8.1).
+- [x] **[DEV] Fluxo de Criação Dinâmica:** Skill 'senha' (PassGen) integrada e funcional (v1.8.1).
 - [x] **[DEV] Calculadora Inteligente:** Integração com Camada de Persistência para variáveis (v1.8.5).
 - [ ] **[DEV] Hot-Load Integration:** Carregamento sem restart.
 
@@ -94,16 +96,16 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 ---
 
 ## 📑 HISTÓRICO DE ENTREGAS E VALIDAÇÕES
-* **Snapshot 1.7.5:** Homologação da Camada de Persistência Criptografada.
 * **Snapshot 1.8.0:** Homologação do Sandbox de Criação.
 * **Snapshot 1.8.1:** Homologação da Skill 'PassGen'.
-* **Snapshot 1.8.5:** Homologação da Calculadora com Memória Persistente. Sucesso nos testes de gravação (set imposto) e uso posterior de variável em cálculo.
+* **Snapshot 1.8.5:** Homologação da Calculadora com Memória Persistente.
+* **Snapshot 1.9.0:** Homologação do Garbage Collector. Limpeza de registros órfãos e sincronização UTC concluída com sucesso (2 registros removidos no teste final).
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. Realizar Push para o GitHub (Snapshot 1.8.5).
-2. Desenvolvimento do Garbage Collector para limpeza de memórias temporárias no DB.
+1. Realizar Push para o GitHub (Snapshot 1.9.0).
+2. Iniciar a **Automação Total de Skills (Hot-Load)**: Módulo Instalador unificado.
 
 ---
-**Última Atualização:** 18/04/2026 14:00:00
+**Última Atualização:** 18/04/2026 14:30:00
