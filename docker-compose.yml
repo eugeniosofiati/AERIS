@@ -1,0 +1,14 @@
+services:
+  aeris-app:
+    build: .
+    container_name: aeris_container
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - .:/app
+    environment:
+      - DB_HOST=host.docker.internal
+      - DB_USER=geninho
+      - DB_PASSWORD=Smg955fd!@
+      - DB_NAME=aeris_db
+      - AERIS_SECRET_KEY=l55uyaVVa6s-03ko_xQ5ls4bU0RA5cazezcim32DnuY=

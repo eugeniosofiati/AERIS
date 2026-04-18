@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Docker/Logs
+logs/*.log
+*.sql
+
+# Sensível (Opcional se você for usar .env no futuro)
+# Por enquanto, como os segredos estão no docker-compose.yml, 
+# tome cuidado ao subir esse arquivo se o repo for público.

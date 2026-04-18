@@ -1,6 +1,6 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v1.5.3 (Context Core Active & Memory Hierarchy)  
+**Documento de Referência:** v1.5.2 (Security Core & AES-256 Encryption Homologated)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
 **Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação.
 
@@ -11,8 +11,8 @@
 ### 1. Cérebro Fixo (Core Modules)
 Localizados em `src/modulos/core/`. Funções transversais e vitais:
 * **estilo.py:** Renderização, limpeza de saída técnica e moldura de resposta (Ativo).
-* **seguranca.py:** Gestão de criptografia AES-256 (Fernet) com chave persistente (Ativo).
-* **contexto.py:** Gestão de memórias profundas (encriptadas) e superficiais (voláteis) (Ativo).
+* **seguranca.py:** Gestão de criptografia AES-256 (Fernet) com chave persistente via environment (Ativo).
+* **contexto.py:** Orquestração de memórias profundas e superficiais (Pendente).
 
 ### 2. Módulos de Skill (20 Slots de Expansão)
 Localizados em `src/modulos/modulo_n.py`. Habilidades dinâmicas que podem ser "ensinadas" ao sistema.
@@ -53,10 +53,9 @@ Localizados em `src/modulos/modulo_n.py`. Habilidades dinâmicas que podem ser "
 - [x] **[DBA] Conectividade:** Homologação via `host.docker.internal:3306`.
 - [x] **[DBA] Modelagem Relacional:** `usuarios_autorizados`, `auditoria_imutavel`, `contexto_profundo/superficial`.
 - [x] **[DBA] Matriz de Autoridade:** Cadastro de Mestre (ID 0) e Visitante (ID 1).
-- [x] **[DEV] Core de Contexto:** Implementação do Módulo Core para gestão de fatos e sessões.
+- [x] **[DEV] Skill de Contexto:** Métodos de leitura e escrita integrados.
 - [x] **[DEV] Hardening de Dados:** Implementação de criptografia AES-256 no Módulo Core Segurança. 
-- [x] **[QA] Persistência de Chave:** Configuração da `AERIS_SECRET_KEY` no `docker-compose.yml`.
-- [x] **[QA] Teste de Hierarquia de Memória:** Validação de gravação/leitura de fatos profundos e variáveis de sessão.
+- [x] **[QA] Persistência de Chave:** Configuração da `AERIS_SECRET_KEY` no `docker-compose.yml` para evitar perda de dados.
 - [ ] **[QA] Teste de Isolamento:** Garantir que Visitantes não leiam Contexto Profundo (Pendente).
 
 ### [FASE 3] O AGENTE & PIPELINE DE EXECUÇÃO (O Cérebro)
@@ -93,10 +92,9 @@ Localizados em `src/modulos/modulo_n.py`. Habilidades dinâmicas que podem ser "
 * **Snapshot 1.4.6:** Validação do Kill-Switch e Auditoria de tentativas negadas.
 * **Snapshot 1.5.0:** Criação física da estrutura modular e implementação lógica do Pipeline.
 * **Snapshot 1.5.1:** Criação da Arquitetura Híbrida e Módulo de Estilo.
-* **Snapshot 1.5.2:** Ativação do Módulo de Segurança (AES-256) e chave persistente.
-* **Snapshot 1.5.3:** Ativação do Módulo de Contexto. Homologação da separação entre memória de longo prazo (encriptada) e curto prazo (volátil).
+* **Snapshot 1.5.2:** Ativação do Módulo de Segurança (AES-256). Homologação de chave persistente e resolução do erro de decodificação no boot via sincronização de estado.
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. Iniciar a migração dos 20 slots de Skill para funcionalidades reais (Ex: Módulo de Monitoramento ou Módulo de Auditoria Ativa).
+1. Iniciar desenvolvimento do Módulo Core de Contexto (`contexto.py`) para organizar a hierarquia de memórias (Fatos Persistentes vs. Variáveis de Sessão).
