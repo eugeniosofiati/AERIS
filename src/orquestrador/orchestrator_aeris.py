@@ -1,4 +1,5 @@
 import os
+import re
 import importlib.util
 import mysql.connector
 from src.skills.execucao import ExecucaoSkill
@@ -63,21 +64,40 @@ class OrchestratorAeris:
             return modulo.SkillModule(self)
         return None
 
+    def qa_de_saida(self, conteudo_bruto):
+        """Etapa 8: Sanitização de saída técnica"""
+        padroes_bloqueio = [
+            r"mysql\.connector", r"Traceback", r"File \"/.*\"",
+            r"Password", r"Secret", r"Key", r"172\.\d+\.\d+\.\d+",
+            r"Smg955fd!@", r"l55uyaVVa.*" 
+        ]
+        saida_limpa = str(conteudo_bruto)
+        detectado = False
+        for padrao in padroes_bloqueio:
+            if re.search(padrao, saida_limpa, re.IGNORECASE):
+                saida_limpa = re.sub(padrao, "[DADO PROTEGIDO]", saida_limpa, flags=re.IGNORECASE)
+                detectado = True
+        if detectado:
+            return f"⚠️ [ALERTA DE SEGURANÇA]: Conteúdo técnico filtrado pelo QA de Saída.\n\n{saida_limpa}"
+        return saida_limpa
+
     def pipeline_de_execucao(self, input_bruto, usuario_id):
         status = "SUCCESS"
         erro_log = None
-        
-        # Nova Etapa 5: Tradução de Gatilho para Módulo
         nome_arquivo = self.buscar_modulo_por_gatilho(input_bruto)
         skill = self.carregar_modulo_dinamico(nome_arquivo)
-        
         if skill:
-            resultado = skill.executar()
-            resposta_final = self.estilo.formatar_saida(resultado, "MESTRE")
+            try:
+                resultado_bruto = skill.executar()
+                resultado_sanitizado = self.qa_de_saida(resultado_bruto)
+                resposta_final = self.estilo.formatar_saida(resultado_sanitizado, "MESTRE")
+            except Exception as e:
+                status = "ERRO"
+                erro_log = str(e)
+                resposta_final = self.estilo.formatar_saida(self.qa_de_saida(f"Erro na Skill: {e}"), "SISTEMA")
         else:
             status = "ERRO"
             msg = f"Habilidade '{input_bruto}' não localizada. Deseja que eu a desenvolva?"
             resposta_final = self.estilo.formatar_saida(msg, "SISTEMA")
-
         self.registrar_auditoria(usuario_id, input_bruto, status, erro_log)
         return resposta_final, erro_log
