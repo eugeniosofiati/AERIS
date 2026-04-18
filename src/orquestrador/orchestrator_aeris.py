@@ -1,115 +1,69 @@
-from src.modulos.core.meed import MEEDModule
-from src.modulos.core.instalador import InstaladorModule
 import os
-import re
 import hashlib
-import importlib.util
 import mysql.connector
-from src.skills.execucao import ExecucaoSkill
 from src.modulos.core.estilo import EstiloMódulo
-from src.modulos.core.seguranca import SegurancaMódulo
 from src.modulos.core.contexto import ContextoMódulo
-# --- NOVA LINHA ABAIXO ---
 from src.modulos.core.sandbox import SandboxMódulo
+from src.modulos.core.instalador import InstaladorModule
+from src.modulos.core.meed import MEEDModule
 
 class OrchestratorAeris:
     def __init__(self):
-        self.executor = ExecucaoSkill()
+        self.salt = os.getenv("AERIS_SALT", "aerisdebauruparaomundo")
+        self.diretorio_modulos = "src/modulos"
         self.estilo = EstiloMódulo()
-        self.seguranca = SegurancaMódulo()
         self.contexto = ContextoMódulo(self)
-        # --- NOVA LINHA ABAIXO ---
         self.sandbox = SandboxMódulo(self)
         self.instalador = InstaladorModule(self)
         self.meed = MEEDModule(self)
-        
-        self.diretorio_modulos = "src/modulos/"
-        self.estado = "BASE"
-        self.__salt = os.getenv('AERIS_SALT', '') 
-        
+
     def conectar_db(self):
         return mysql.connector.connect(
-            host=os.getenv('DB_HOST', 'host.docker.internal'),
-            user=os.getenv('DB_USER', 'geninho'),
-            password=os.getenv('DB_PASSWORD', ''),
-            database=os.getenv('DB_NAME', 'aeris_db')
+            host=os.getenv("DB_HOST", "host.docker.internal"),
+            user=os.getenv("DB_USER", "geninho"),
+            password=os.getenv("DB_PASSWORD", "Smg955fd!@"),
+            database=os.getenv("DB_NAME", "aeris_db")
         )
 
-    def calcular_hash_modulo(self, caminho_arquivo):
-        try:
-            with open(caminho_arquivo, "rb") as f:
-                conteudo = f.read()
-            assinatura = conteudo + self.__salt.encode()
-            return hashlib.sha256(assinatura).hexdigest()
-        except:
-            return None
-
-    def buscar_role_usuario(self, usuario_id):
+    def buscar_modulo_por_gatilho(self, input_bruto):
+        gatilho = input_bruto.split()[0].lower()
+        argumentos = " ".join(input_bruto.split()[1:])
         try:
             conn = self.conectar_db()
             cursor = conn.cursor()
-            cursor.execute("SELECT role FROM usuarios_autorizados WHERE id = %s AND status = 1", (usuario_id,))
-            res = cursor.fetchone()
-            cursor.close()
-            conn.close()
-            return res[0] if res else None
-        except:
-            return None
-
-    def buscar_modulo_por_gatilho(self, comando):
-        partes = comando.split()
-        if not partes: return None, None, None
-        trigger_input = partes[0].lower()
-        argumentos = " ".join(partes[1:])
-        
-        try:
-            conn = self.conectar_db()
-            cursor = conn.cursor()
-            cursor.execute("SELECT nome_modulo, hash_integridade FROM skill_triggers WHERE gatilho = %s", (trigger_input,))
+            cursor.execute("SELECT nome_modulo, hash_integridade FROM skill_triggers WHERE gatilho = %s", (gatilho,))
             res = cursor.fetchone()
             cursor.close()
             conn.close()
             if res:
                 return f"modulo_{res[0]}.py", res[1], argumentos
+            return None
         except:
-            return None, None, None
+            return None
 
-    def carregar_modulo_dinamico(self, nome_arquivo, hash_esperado):
-        if not nome_arquivo: return None
-        caminho_completo = os.path.join(self.diretorio_modulos, nome_arquivo)
+    def pipeline_de_execucao(self, input_bruto, usuario_id=0):
+        resultado_busca = self.buscar_modulo_por_gatilho(input_bruto)
+        if not resultado_busca:
+            self.meed.registrar_lacuna(input_bruto, usuario_id)
+            return self.estilo.formatar_saida(f"Não localizado: {input_bruto}. Intenção registrada.", "SISTEMA"), "NOT_FOUND"
         
-        if os.path.exists(caminho_completo):
-            hash_atual = self.calcular_hash_modulo(caminho_completo)
-            if hash_esperado and hash_atual != hash_esperado:
-                return "ERR_INTEGRITY"
+        nome_arquivo, hash_esperado, argumentos = resultado_busca
+        caminho_modulo = os.path.join(self.diretorio_modulos, nome_arquivo)
+
+        if os.path.exists(caminho_modulo):
+            with open(caminho_modulo, "r") as f:
+                conteudo_bruto = f.read().strip()
             
-            spec = importlib.util.spec_from_file_location("mod", caminho_completo)
+            hash_calculado = hashlib.sha256(conteudo_bruto.encode() + self.salt.encode()).hexdigest()
+
+            if hash_calculado != hash_esperado:
+                return self.estilo.formatar_saida("❌ VIOLAÇÃO DE INTEGRIDADE!", "SISTEMA"), "INTEGRITY_ERROR"
+
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("modulo_dinamico", caminho_modulo)
             modulo = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(modulo)
-            return modulo.SkillModule(self)
-        return None
-
-    def pipeline_de_execucao(self, input_bruto, usuario_id):
-        role = self.buscar_role_usuario(usuario_id)
-        if not role:
-            return self.estilo.formatar_saida("Acesso Negado.", "SISTEMA"), "FORBIDDEN"
-
-        resultado_busca = self.buscar_modulo_por_gatilho(input_bruto)
-        if resultado_busca:
-            nome_arquivo, hash_esperado, argumentos = resultado_busca
-        else:
-            nome_arquivo, hash_esperado, argumentos = None, None, None
-        skill = self.carregar_modulo_dinamico(nome_arquivo, hash_esperado)
+            skill = modulo.SkillModule(self)
+            return self.estilo.formatar_saida(skill.executar(argumentos), "MESTRE"), "SUCCESS"
         
-        if skill == "ERR_INTEGRITY":
-            return self.estilo.formatar_saida("❌ VIOLAÇÃO DE INTEGRIDADE!", "SISTEMA"), "SEC_ERR"
-        
-        if skill:
-            try:
-                resultado = skill.executar(argumentos)
-                return self.estilo.formatar_saida(resultado, "MESTRE"), None
-            except Exception as e:
-                return self.estilo.formatar_saida(f"Erro: {e}", "SISTEMA"), "ERR"
-        
-        self.meed.registrar_lacuna(input_bruto, usuario_id)
-        return self.estilo.formatar_saida(f"Não localizado: {input_bruto}. Intenção registrada para evolução.", "SISTEMA"), "NOT_FOUND"
+        return "Erro físico: arquivo não encontrado.", "FILE_ERROR"

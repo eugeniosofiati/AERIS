@@ -43,4 +43,17 @@ class MEEDModule:
                 return f'💡 MEED: Notei interesse recorrente em: { ", ".join(lista) }. Deseja converter em Skill?'
             return None
         except:
-            return None
+            return Non
+    def gerar_esqueleto(self, nome_skill):
+        """Gera um boilerplate funcional para a nova skill."""
+        codigo = f"""
+class SkillModule:
+    def __init__(self, orchestrator):
+        self.orchestrator = orchestrator
+
+    def executar(self, argumentos=None):
+        # Mestre: Implemente a lógica para {nome_skill} aqui
+        return f'🚀 Skill {nome_skill} executada! Argumentos: {{argumentos}}'
+"""
+        return codigo.strip()
+
