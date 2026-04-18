@@ -1,3 +1,4 @@
+from src.modulos.core.instalador import InstaladorModule
 import os
 import re
 import hashlib
@@ -18,6 +19,7 @@ class OrchestratorAeris:
         self.contexto = ContextoMódulo(self)
         # --- NOVA LINHA ABAIXO ---
         self.sandbox = SandboxMódulo(self)
+        self.instalador = InstaladorModule(self)
         
         self.diretorio_modulos = "src/modulos/"
         self.estado = "BASE"
