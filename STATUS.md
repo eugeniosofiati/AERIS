@@ -1,6 +1,6 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v1.5.9 (Dynamic Skill Triggering Homologated)  
+**Documento de Referência:** v1.6.0 (Output QA & Security Hardening Homologated)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
 **Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação. Se o assistente perder o contexto, o conteúdo anterior deve ser reenviado pelo usuário para reintegração.
 
@@ -16,7 +16,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 4. **Sub-skills:** Unidades técnicas atômicas (ex: Sanitização de comandos, Validação de sintaxe).
 
 ### 🛡️ Divisão de Soberania (v1.5.5+):
-* **Core (Cérebro Fixo):** Estilo, Segurança, Contexto e Auditoria. Permanecem no núcleo para estabilidade.
+* **Core (Cérebro Fixo):** Estilo, Segurança, Contexto, Auditoria e **QA de Saída**.
 * **Slots (Skills Dinâmicas):** Telemetria e habilidades auto-geradas. Carregados via `importlib`.
 
 ---
@@ -54,7 +54,8 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DEV] Skill de Execução & Sub-skill de Sanitização:** Integrada.
 - [x] **[DEV] Mapeamento Dinâmico:** Etapas 5 e 6 (Carga em tempo real).
 - [x] **[DBA] Skill Triggers:** Tabela para múltiplos gatilhos por slot funcional (Sinônimo 'sistema' -> 'status').
-- [ ] **[DEV] QA de Saída (Etapa 8):** Filtro contra exposição de dados sensíveis (Ajuste de Excelência).
+- [x] **[DEV] QA de Saída (Etapa 8):** Filtro contra exposição de dados sensíveis homologado (v1.6.0).
+- [ ] **[DEV] Gatekeeper (Etapa 2):** Validação rígida de Role (Mestre vs Visitante).
 - [ ] **[DEV] Pipeline Completo:** Integração das 10 etapas remanescentes.
 
 ### [FASE 4] MELHORIAS, TELEMETRIA & MEED (Evolução)
@@ -91,12 +92,13 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 * **Snapshot 1.5.7:** Homologação da Consciência de Lacuna (Proposição 'calculadora').
 * **Snapshot 1.5.8:** Revisão de Excelência: Inclusão de QA de Saída e Integridade de Código no backlog.
 * **Snapshot 1.5.9:** Homologação do Roteamento por Gatilhos Dinâmicos (Skill Triggers) via Banco de Dados.
+* **Snapshot 1.6.0:** Homologação da Etapa 8 (QA de Saída). Blindagem contra vazamento de senhas e logs técnicos confirmada.
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. Atualizar o repositório GIT com o estado atual do Snapshot 1.5.9.
-2. Implementar a Etapa 8 (QA de Saída) no Orquestrador para sanitização de respostas técnicas.
+1. Atualizar o repositório GIT com o estado atual do Snapshot 1.6.0.
+2. Implementar a Etapa 2 (Gatekeeper) para validação rígida de autoridade.
 
 ---
-**Última Atualização:** 18/04/2026 11:13:45
+**Última Atualização:** 18/04/2026 11:28:10
