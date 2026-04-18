@@ -1,109 +1,102 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v1.5.5 (Skill Telemetry & Hardware Access)  
+**Documento de Referência:** v1.5.9 (Dynamic Skill Triggering Homologated)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
-**Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação.
+**Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação. Se o assistente perder o contexto, o conteúdo anterior deve ser reenviado pelo usuário para reintegração.
 
 ---
 
-## 🏗️ ARQUITETURA DO ECOSSISTEMA (HÍBRIDA & MODULAR)
+## 🏗️ ARQUITETURA DO ECOSSISTEMA
+O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo central coordena 20 sistemas independentes através de um pipeline de 10 etapas. Nenhuma ação é executada sem passar pelos filtros de Segurança e Coerência.
 
-### 1. Cérebro Fixo (Core Modules)
-Localizados em `src/modulos/core/`. Funções transversais e vitais:
-* **estilo.py:** Renderização, limpeza de saída técnica e moldura de resposta (Ativo).
-* **seguranca.py:** Gestão de criptografia AES-256 (Fernet) com chave persistente (Ativo).
-* **contexto.py:** Gestão de memórias profundas (encriptadas) e superficiais (voláteis) (Ativo).
+### Hierarquia de Componentes:
+1. **Orquestrador:** Cérebro executivo (Ativo em container Docker). Único ponto de contato entre módulos.
+2. **Módulos (20 Sistemas):** Unidades lógicas de processamento (Contexto, Segurança, Auditoria, etc).
+3. **Skills:** Interfaces de habilidades funcionais (ex: Execução de Scripts).
+4. **Sub-skills:** Unidades técnicas atômicas (ex: Sanitização de comandos, Validação de sintaxe).
 
-### 2. Módulos de Skill (20 Slots de Expansão)
-Localizados em `src/modulos/modulo_n.py`. Habilidades dinâmicas que podem ser "ensinadas" ao sistema.
-* **Mapeamento Dinâmico:** O Orquestrador agora utiliza `importlib` para carregar classes `SkillModule` em tempo de execução sem necessidade de restart do core (Ativo).
-* **modulo_status.py:** Primeira Skill de diagnóstico técnico. Realiza leitura de telemetria de hardware (CPU, RAM, Disco) via `psutil` (Ativo - Slot 2).
-
-### 3. Pipeline de 10 Etapas (O Cérebro)
-1. **Ingestão:** Recebimento do input e sincronização de estado (Hot-Swap).
-2. **Gatekeeper:** Validação de Identidade (DB) e Status (Kill-Switch).
-3. **Estado:** Validação de permissões por modo (BASE/PROTECAO/CRIACAO).
-4. **Análise de Intenção:** Compreensão semântica (Placeholder).
-5. **Seleção de Módulos:** Escolha dinâmica entre os 20 slots via Mapeamento de Gatilhos (Ativo).
-6. **Delegação de Skills:** Encaminhamento e instância do módulo carregado (Ativo).
-7. **Execução & Sanitização:** Processamento real e filtragem de comandos (Ativo).
-8. **QA de Saída:** Validação de segurança do resultado bruto (Placeholder).
-9. **Renderização de Estilo:** Formatação final via Módulo Core (Ativo).
-10. **Auditoria Imutável:** Registro eterno de toda a cadeia no MySQL (Ativo).
+### 🛡️ Divisão de Soberania (v1.5.5+):
+* **Core (Cérebro Fixo):** Estilo, Segurança, Contexto e Auditoria. Permanecem no núcleo para estabilidade.
+* **Slots (Skills Dinâmicas):** Telemetria e habilidades auto-geradas. Carregados via `importlib`.
 
 ---
 
-## 🛠️ BACKLOG DE DESENVOLVIMENTO (DETALHADO)
+## 🛠️ BACKLOG DE DESENVOLVIMENTO (FASES)
 
 ### [FASE 0] PREPARAÇÃO E LIMPEZA (GREENFIELD)
-- [x] **[INFRA] Purga de Ambiente:** Deleção total do diretório antigo `/opt/AERIS`.
-- [x] **[DBA] Reset de Dados:** Deleção da base `aeris_db` e usuários antigos (MySQL 8.0).
-- [x] **[INFRA] Novo Repositório:** Recriação do repositório no GitHub com autenticação PAT.
-- [x] **[INFRA] Commit Zero:** STATUS.md original enviado ao GitHub.
+- [x] **[INFRA] Limpeza Local:** Deleção total do diretório antigo em `/opt/AERIS`.
+- [x] **[DBA] Reset de Dados:** Deleção da base MySQL aeris_db e usuários antigos.
+- [x] **[INFRA] Purga de Repositório:** Deleção do repositório GitHub antigo.
+- [x] **[INFRA] Novo Repositório:** Recriação do repositório eugeniosofiati/AERIS.
+- [x] **[INFRA] Segurança Git:** Configuração de autenticação via PAT.
+- [x] **[INFRA] Primeiro Commit:** STATUS.md versionado e enviado ao GitHub.
 
 ### [FASE 1] INFRAESTRUTURA & CORE (O Esqueleto)
-- [x] **[INFRA] Estrutura Física:** Criação dos diretórios `src`, `config`, `data`, `logs`, `tests`.
-- [x] **[INFRA] Dockerização:** Dockerfile (Python 3.11-slim) e `docker-compose.yml` funcionais.
-- [x] **[DEV] Fix de Importação:** Injeção de `PYTHONPATH=/app` no ambiente Docker.
-- [x] **[DEV] Shutdown Gracioso:** Implementação de `signal.signal` (SIGTERM/SIGINT) - Fim do erro 137.
-- [x] **[DEV] Orquestrador Modular:** Classe `OrchestratorAeris` com loop controlado.
-- [x] **[DEV] Gestão de Estados:** Polling Ativo de 2 segundos para Hot-Swap reativo via DB.
-- [x] **[INFRA] Estrutura Híbrida:** Criação de `src/modulos/core/` e 20 slots de skill.
-- [x] **[INFRA] Docker Networking:** Homologação de conectividade entre containers (`agente-redis` e `agente-aeris-core`).
+- [x] **[INFRA] Estrutura Física:** Criação dos diretórios `src/`, `config/`, `data/`, `logs/` e `tests/`.
+- [x] **[INFRA] Dockerização (Base):** Criação do `Dockerfile` (Python 3.11-slim) e `requirements.txt`.
+- [x] **[INFRA] Orquestração Docker:** `docker-compose.yml` com `extra_hosts` (host-gateway).
+- [x] **[INFRA] Build da Imagem:** Imagem `aeris-aeris-app` gerada.
+- [x] **[DEV] Fix de Importação Python:** Injeção de `PYTHONPATH=/app` no Dockerfile.
+- [x] **[DEV] Shutdown Gracioso:** Implementação de `signal.signal` (Resolução do erro 137).
+- [x] **[DEV] Orquestrador Modular Base:** Classe `OrchestratorAeris` com loop controlado.
+- [x] **[DEV] Core de Estilo:** Módulo `estilo.py` com molduras visuais (Ativo).
+- [x] **[DEV] Core de Segurança:** Criptografia AES-256 (Fernet) ativa.
+- [ ] **[INFRA] Setup Docker Multi-Network:** (Pendente) aeris_internal e aeris_bridge.
 
 ### [FASE 2] BANCO DE DADOS & PERSISTÊNCIA (O Sistema Nervoso)
-- [x] **[DBA] Conectividade:** Homologação via `host.docker.internal:3306`.
-- [x] **[DBA] Modelagem Relacional:** `usuarios_autorizados`, `auditoria_imutavel`, `contexto_profundo/superficial`.
-- [x] **[DBA] Matriz de Autoridade:** Cadastro de Mestre (ID 0) e Visitante (ID 1).
-- [x] **[DEV] Core de Contexto:** Implementação do Módulo Core para gestão de fatos e sessões.
-- [x] **[DEV] Hardening de Dados:** Implementação de criptografia AES-256 no Módulo Core Segurança. 
-- [x] **[QA] Persistência de Chave:** Configuração da `AERIS_SECRET_KEY` no `docker-compose.yml`.
-- [x] **[QA] Teste de Hierarquia de Memória:** Validação de gravação/leitura de fatos profundos e variáveis de sessão.
-- [ ] **[QA] Teste de Isolamento:** Garantir que Visitantes não leiam Contexto Profundo (Pendente).
+- [x] **[DBA] Conectividade Host-Container:** Homologação via `host.docker.internal` com usuário `geninho`.
+- [x] **[DBA] Auditoria Imutável:** Tabela `auditoria_imutavel` funcional (Etapa 10).
+- [x] **[DEV] Core de Contexto:** Gestão de memórias encriptadas operacional.
+- [ ] **[DBA] Modelagem Relacional:** Tabelas `usuarios_autorizados` e contextos.
+- [ ] **[DEV] Camada de Persistência:** Implementar CRUD com AES-256.
 
 ### [FASE 3] O AGENTE & PIPELINE DE EXECUÇÃO (O Cérebro)
-- [x] **[DEV] Execução & Sanitização:** Integração da Skill de Execução ao Pipeline.
-- [x] **[DEV] Auditoria Total:** Registro de tentativas bloqueadas no banco.
-- [x] **[DEV] Pipeline 10 Etapas:** Implementação da lógica sequencial no Orquestrador.
-- [x] **[DEV] Integração Core Estilo:** Ativação da Etapa 9 para limpeza de saída técnica.
-- [x] **[QA] Homologação de Segurança:** Validação de Bypass do Mestre e Bloqueio de ID 1 Inativo.
-- [x] **[QA] Homologação Visual:** Validação de saída limpa e emoldurada para o Mestre.
-- [x] **[DEV] Mapeamento Dinâmico (Etapa 5 e 6):** Implementação de carregamento de módulos via `importlib.util`.
-- [x] **[DEV] Slot de Expansão:** Criação do `modulo_teste.py` como prova de conceito de Hot-Swap.
-- [x] **[QA] Homologação Docker Integrada:** Execução bem-sucedida do comando `teste` dentro do container `aeris-v1.5.4`.
+- [x] **[DEV] Skill de Execução & Sub-skill de Sanitização:** Integrada.
+- [x] **[DEV] Mapeamento Dinâmico:** Etapas 5 e 6 (Carga em tempo real).
+- [x] **[DBA] Skill Triggers:** Tabela para múltiplos gatilhos por slot funcional (Sinônimo 'sistema' -> 'status').
+- [ ] **[DEV] QA de Saída (Etapa 8):** Filtro contra exposição de dados sensíveis (Ajuste de Excelência).
+- [ ] **[DEV] Pipeline Completo:** Integração das 10 etapas remanescentes.
 
 ### [FASE 4] MELHORIAS, TELEMETRIA & MEED (Evolução)
-- [x] **[DEV] Sistema de Telemetria:** Implementação do `modulo_status.py` com leitura de CPU, RAM e Disco (Ativo).
-- [x] **[INFRA] Hardening de Container:** Configuração de modo privilegiado e mapeamento de `/proc` para telemetria real.
-- [ ] **[DEV] Módulo MEED:** Motor de Evolução e Diagnóstico.
-- [ ] **[QA] Teste de Reversibilidade:** Validar Rollback automático para estado BASE.
+- [x] **[DEV] Sistema de Telemetria:** Módulo `modulo_status.py` funcional (CPU, RAM, Disco).
+- [x] **[INFRA] Hardening de Telemetria:** Mapeamento de `/proc` e modo privilegiado.
+- [ ] **[SEC] Assinatura de Código (Hash Chain):** Validação SHA-256 antes da carga (Ajuste de Excelência).
+- [ ] **[DEV] Módulo MEED (Evolução):** Motor de sugestão de novas habilidades.
 
-### [FASE 5] CONECTIVIDADE E INTERFACES (Canais de Entrada)
-- [ ] **[DEV] Módulo de Comunicação:** Integração Telegram/WhatsApp.
-- [ ] **[DEV] Módulo de Voz:** Processamento Speech-to-Text.
-- [ ] **[DEV] Gateway Web:** Painel leve de monitoramento.
-
-### [FASE 6] COGNIÇÃO E INTELIGÊNCIA (Módulos de IA)
-- [ ] **[DEV] Integração LLM:** Conexão com modelos de linguagem.
-- [ ] **[DEV] Módulo de RAG:** Busca em documentos técnicos locais.
-
-### [FASE 7] AUTOMAÇÃO E CI/CD (Estabilidade Máxima)
-- [ ] **[DEV] Módulo de Auto-Update:** Sincronização automática com GitHub.
-- [ ] **[DEV] Sistema de Backup:** Backup encriptado automatizado.
-- [ ] **[QA] Homologação Final:** Stress test total de todos os sistemas.
+### [FASE 5] AUTO-PROVISIONAMENTO (Cognição Ativa)
+- [x] **[DEV] Consciência de Lacuna:** Detecção de comandos órfãos e proposição (v1.5.7).
+- [x] **[DEV] Módulo Criador (Base):** Fábrica de escrita de arquivos `.py`.
+- [ ] **[DEV] Sandbox de Criação:** Validação de sintaxe antes da persistência física.
+- [ ] **[DEV] Hot-Load Integration:** Carregamento sem restart.
 
 ---
 
-## 📑 HISTÓRICO DE VALIDAÇÕES TÉCNICAS
-* **Snapshot 1.4.6:** Validação do Kill-Switch e Auditoria de tentativas negadas.
-* **Snapshot 1.5.0:** Criação física da estrutura modular e implementação lógica do Pipeline.
-* **Snapshot 1.5.1:** Criação da Arquitetura Híbrida e Módulo de Estilo.
-* **Snapshot 1.5.2:** Ativação do Módulo de Segurança (AES-256) e chave persistente.
-* **Snapshot 1.5.3:** Ativação do Módulo de Contexto. Homologação da separação entre memória de longo prazo (encriptada) e curto prazo (volátil).
-* **Snapshot 1.5.4:** Implementação do **Mapeamento Dinâmico**. Validação da infraestrutura Docker para suportar injeção de comandos via TTY e carregamento de módulos `SkillModule` sem interrupção do serviço.
-* **Snapshot 1.5.5:** Implementação da **Telemetria de Hardware**. Homologação do acesso privilegiado ao Host via container e correção de compatibilidade de leitura de disco em ambiente virtualizado.
+## 🔐 MATRIZ DE ACESSO E CONECTIVIDADE
+
+### 1. Usuário Mestre (Authority - ID 0)
+* **Permissões:** Acesso ROOT. Pode alterar código-fonte via estado CRIACAO.
+* **Memória:** Acesso ao Contexto Profundo e Persistente (AES-256).
+* **Visibilidade:** Recebe logs técnicos completos e Chain of Thought.
+
+### 2. Usuário Visitante (Guest - ID > 0)
+* **Permissões:** Restritas a Whitelist. Contexto Superficial e Volátil.
+* **Isolamento:** Não conhece a existência do Mestre ou módulos profundos.
+
+---
+
+## 📑 HISTÓRICO DE ENTREGAS E VALIDAÇÕES
+* **Snapshot 1.3.9:** Estabilização de Ciclo de Vida (Signal Handling).
+* **Snapshot 1.5.5:** Implementação da Telemetria de Hardware Real.
+* **Snapshot 1.5.6:** Homologação da Ponte Docker-Host e Auditoria Imutável (ID 12).
+* **Snapshot 1.5.7:** Homologação da Consciência de Lacuna (Proposição 'calculadora').
+* **Snapshot 1.5.8:** Revisão de Excelência: Inclusão de QA de Saída e Integridade de Código no backlog.
+* **Snapshot 1.5.9:** Homologação do Roteamento por Gatilhos Dinâmicos (Skill Triggers) via Banco de Dados.
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. Consolidar o motor de **Slots Dinâmicos**: Criar a lógica onde o Orquestrador pode instanciar e deletar novos slots de skill em tempo de execução com base em solicitações complexas do Mestre.
+1. Atualizar o repositório GIT com o estado atual do Snapshot 1.5.9.
+2. Implementar a Etapa 8 (QA de Saída) no Orquestrador para sanitização de respostas técnicas.
+
+---
+**Última Atualização:** 18/04/2026 11:13:45
