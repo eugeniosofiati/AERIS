@@ -1,13 +1,13 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v2.0.0 (Hot-Load & Auto-Provisioning Framework Homologated)  
+**Documento de Referência:** v2.1.0 (MEED Cognitive Engine Homologated)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
 **Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação. Se o assistente perder o contexto, o conteúdo anterior deve ser reenviado pelo usuário para reintegração.
 
 ---
 
-## 🏗️ ARQUITETURA DO ECOSSISTEMA (v2.0.0)
-O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo central coordena 20 sistemas independentes através de um pipeline de 10 etapas. A partir da v2.0.0, o sistema atingiu a maturidade de auto-expiração e auto-instalação.
+## 🏗️ ARQUITETURA DO ECOSSISTEMA (v2.1.0)
+O AERIS opera sob um modelo de **Orquestração Modular**, integrando agora a camada de **Metacognição Funcional**. O sistema identifica lacunas em seu próprio corpo de habilidades e sugere evoluções ao Mestre.
 
 ### Hierarquia de Componentes:
 1. **Orquestrador:** Cérebro executivo (Ativo em container Docker). Único ponto de contato entre módulos.
@@ -15,14 +15,15 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 3. **Skills:** Interfaces de habilidades funcionais (ex: Execução de Scripts).
 4. **Sub-skills:** Unidades técnicas atômicas (ex: Sanitização de comandos, Validação de sintaxe).
 
-### 🛡️ Blindagem de Soberania (v2.0.0+):
+### 🛡️ Blindagem de Soberania (v2.1.0+):
 * **Core (Cérebro Fixo):** Estilo, Segurança, Contexto, Auditoria, QA de Saída e Gatekeeper.
 * **Integridade Dinâmica:** Validação SHA-256 via Salt injetado por Variável de Ambiente (`AERIS_SALT`).
 * **Memória Permanente:** Camada de Persistência criptografada (AES-256) via MySQL.
 * **Garbage Collector (GC):** Remoção física de registros expirados via `UTC_TIMESTAMP()`.
 * **Sincronização Temporal:** Padronização integral em UTC para evitar derivas de fuso horário.
 * **Módulo Instalador:** Automação total do pipeline de criação (Sintaxe -> Escrita -> Hash -> DB).
-* **Hot-Load Integration:** Novas skills são ativadas instantaneamente sem restart do container (v2.0.0).
+* **Hot-Load Integration:** Novas skills são ativadas instantaneamente sem restart (v2.0.0).
+* **Módulo MEED (v2.1.0):** Motor de Evolução e Expansão por Demanda operacional. Captura intenções órfãs e propõe novas skills baseadas em recorrência.
 
 ---
 
@@ -69,7 +70,8 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DEV] Sistema de Telemetria:** Módulo `modulo_status.py` funcional (CPU, RAM, Disco).
 - [x] **[INFRA] Hardening de Telemetria:** Mapeamento de `/proc` e modo privilegiado.
 - [ ] **[SEC] Assinatura de Código (Hash Chain):** Validação SHA-256 antes da carga.
-- [ ] **[DEV] Módulo MEED (Evolução):** Motor de sugestão de novas habilidades.
+- [x] **[DEV] Módulo MEED (Evolução):** Motor de sugestão de novas habilidades (v2.1.0).
+- [ ] **[DEV] MEED-Instalador Bridge:** Automação para criar a skill sugerida automaticamente.
 
 ### [FASE 5] AUTO-PROVISIONAMENTO (Cognição Ativa)
 - [x] **[DEV] Consciência de Lacuna:** Detecção de comandos órfãos e proposição.
@@ -95,14 +97,14 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 ---
 
 ## 📑 HISTÓRICO DE ENTREGAS E VALIDAÇÕES
-* **Snapshot 1.9.0:** Homologação do Garbage Collector e Sincronização UTC.
-* **Snapshot 2.0.0:** Homologação da Automação Total. Framework de instalação operacional; Skill 'Conversor' instalada e executada via Hot-Load sem necessidade de restart.
+* **Snapshot 2.0.0:** Homologação do Framework de Provisionamento Ativo e Hot-Load.
+* **Snapshot 2.1.0:** Homologação do Módulo MEED. O sistema identificou 3 tentativas de 'fatura_cartao', registrou na tabela 'meed_analise' e sugeriu proativamente a conversão em Skill.
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. Realizar Push para o GitHub (Snapshot 2.0.0).
-2. Desenvolvimento do **Módulo MEED (Fase 4)**: Motor de análise de intenção para sugestão proativa de novas habilidades.
+1. Realizar Push para o GitHub (Snapshot 2.1.0).
+2. Desenvolvimento da **Ponte MEED-Instalador**: Permitir que o comando de aceitação da sugestão gere o boilerplate da skill automaticamente.
 
 ---
-**Última Atualização:** 18/04/2026 15:00:00
+**Última Atualização:** 18/04/2026 15:40:00

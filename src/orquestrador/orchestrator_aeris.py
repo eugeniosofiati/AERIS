@@ -1,3 +1,4 @@
+from src.modulos.core.meed import MEEDModule
 from src.modulos.core.instalador import InstaladorModule
 import os
 import re
@@ -20,6 +21,7 @@ class OrchestratorAeris:
         # --- NOVA LINHA ABAIXO ---
         self.sandbox = SandboxMódulo(self)
         self.instalador = InstaladorModule(self)
+        self.meed = MEEDModule(self)
         
         self.diretorio_modulos = "src/modulos/"
         self.estado = "BASE"
@@ -92,7 +94,11 @@ class OrchestratorAeris:
         if not role:
             return self.estilo.formatar_saida("Acesso Negado.", "SISTEMA"), "FORBIDDEN"
 
-        nome_arquivo, hash_esperado, argumentos = self.buscar_modulo_por_gatilho(input_bruto)
+        resultado_busca = self.buscar_modulo_por_gatilho(input_bruto)
+        if resultado_busca:
+            nome_arquivo, hash_esperado, argumentos = resultado_busca
+        else:
+            nome_arquivo, hash_esperado, argumentos = None, None, None
         skill = self.carregar_modulo_dinamico(nome_arquivo, hash_esperado)
         
         if skill == "ERR_INTEGRITY":
@@ -105,4 +111,5 @@ class OrchestratorAeris:
             except Exception as e:
                 return self.estilo.formatar_saida(f"Erro: {e}", "SISTEMA"), "ERR"
         
-        return self.estilo.formatar_saida(f"Não localizado: {input_bruto}", "SISTEMA"), "NOT_FOUND"
+        self.meed.registrar_lacuna(input_bruto, usuario_id)
+        return self.estilo.formatar_saida(f"Não localizado: {input_bruto}. Intenção registrada para evolução.", "SISTEMA"), "NOT_FOUND"
