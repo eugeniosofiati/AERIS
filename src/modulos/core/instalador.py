@@ -8,6 +8,14 @@ class InstaladorModule:
         # Puxa o salt e garante que não seja None
         self.salt = os.getenv('AERIS_SALT', 'aerisdebauruparaomundo')
 
+    
+    def validar_seguranca(self, codigo):
+        blacklist = ['os.system', 'subprocess.', 'shutil.', 'eval(', 'exec(', 'socket', 'rm -rf']
+        for termo in blacklist:
+            if termo in codigo:
+                return False, f'Termo proibido detectado: {termo}'
+        return True, 'Limpo'
+
     def instalar_skill(self, nome_skill, gatilhos, codigo_fonte):
         aprovado, msg = self.orchestrator.sandbox.validar_sintaxe(codigo_fonte)
         if not aprovado:
