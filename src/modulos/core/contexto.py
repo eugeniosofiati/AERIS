@@ -55,7 +55,7 @@ class ContextoMódulo:
         conn.close()
         
         if res:
-            return self.fernet.decrypt(res[0].encode()).decode()
+            return self.fernet.decrypt(res[0] if isinstance(res[0], bytes) else res[0].encode()).decode()
         return None
 
     def executar_garbage_collector(self):

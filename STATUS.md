@@ -53,3 +53,8 @@ O AERIS opera sob um modelo de **Orquestração Modular**, integrando agora uma 
 3. **Limpeza Final:** Remoção de logs residuais de debug no Orquestrador.
 
 **Última Atualização:** 18/04/2026 13:30:00
+
+### [1.3.4] - 2026-04-18
+- **Core Fix:** Aplicado patch em `contexto.py` para tratar tipos `bytes` no MySQL, corrigindo erro de `AttributeError` em descriptografia.
+- **Skill Evolution:** Implementação bem-sucedida de `fatura_relatorio` com bypass de segurança e agregação de dados.
+- **Data Integrity:** Confirmada persistência de gastos (Lazer/Transporte) com saldo total de R$ 640.00.
