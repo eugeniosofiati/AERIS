@@ -1,6 +1,6 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v1.6.1 (Gatekeeper Identity Validation Homologated)  
+**Documento de Referência:** v1.6.3 (Environment Salt & Infrastructure Hardening)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
 **Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação. Se o assistente perder o contexto, o conteúdo anterior deve ser reenviado pelo usuário para reintegração.
 
@@ -15,9 +15,10 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 3. **Skills:** Interfaces de habilidades funcionais (ex: Execução de Scripts).
 4. **Sub-skills:** Unidades técnicas atômicas (ex: Sanitização de comandos, Validação de sintaxe).
 
-### 🛡️ Divisão de Soberania (v1.5.5+):
-* **Core (Cérebro Fixo):** Estilo, Segurança, Contexto, Auditoria, QA de Saída e **Gatekeeper**.
-* **Slots (Skills Dinâmicas):** Telemetria e habilidades auto-geradas. Carregados via `importlib`.
+### 🛡️ Blindagem de Soberania (v1.6.3+):
+* **Core (Cérebro Fixo):** Estilo, Segurança, Contexto, Auditoria, QA de Saída e Gatekeeper.
+* **Integridade Dinâmica:** Validação SHA-256 via Salt injetado por Variável de Ambiente (`AERIS_SALT`).
+* **Resiliência:** Container configurado com `tty: true` e `tail -f` para persistência de serviço.
 
 ---
 
@@ -41,7 +42,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DEV] Orquestrador Modular Base:** Classe `OrchestratorAeris` com loop controlado.
 - [x] **[DEV] Core de Estilo:** Módulo `estilo.py` com molduras visuais (Ativo).
 - [x] **[DEV] Core de Segurança:** Criptografia AES-256 (Fernet) ativa.
-- [ ] **[INFRA] Setup Docker Multi-Network:** (Pendente) aeris_internal e aeris_bridge.
+- [x] **[INFRA] Docker Compose Hardening:** Gestão de segredos via variáveis de ambiente (`AERIS_SALT`).
 
 ### [FASE 2] BANCO DE DADOS & PERSISTÊNCIA (O Sistema Nervoso)
 - [x] **[DBA] Conectividade Host-Container:** Homologação via `host.docker.internal` com usuário `geninho`.
@@ -56,7 +57,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DBA] Skill Triggers:** Tabela para múltiplos gatilhos por slot funcional (Sinônimo 'sistema' -> 'status').
 - [x] **[DEV] QA de Saída (Etapa 8):** Filtro contra exposição de dados sensíveis homologado (v1.6.0).
 - [x] **[DEV] Gatekeeper (Etapa 2):** Validação rígida de Role (Mestre vs Visitante) integrada ao DB (v1.6.1).
-- [ ] **[DEV] Pipeline Completo:** Integração das 10 etapas remanescentes.
+- [x] **[SEC] Assinatura de Código (Etapa 4):** Validação SHA-256 com Salt externo homologada (v1.6.3).
 
 ### [FASE 4] MELHORIAS, TELEMETRIA & MEED (Evolução)
 - [x] **[DEV] Sistema de Telemetria:** Módulo `modulo_status.py` funcional (CPU, RAM, Disco).
@@ -92,12 +93,14 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 * **Snapshot 1.5.9:** Homologação do Roteamento por Gatilhos Dinâmicos (Skill Triggers) via Banco de Dados.
 * **Snapshot 1.6.0:** Homologação da Etapa 8 (QA de Saída). Blindagem contra vazamento de senhas.
 * **Snapshot 1.6.1:** Homologação da Etapa 2 (Gatekeeper). Validação de identidade via DB para controle de soberania.
+* **Snapshot 1.6.2:** Homologação da Imutabilidade via Salted Hash (Bloqueio de arquivos adulterados).
+* **Snapshot 1.6.3:** Migração do Salt para Variável de Ambiente e Hardening do Container Docker.
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. Atualizar o repositório GIT com o estado atual do Snapshot 1.6.1.
-2. Implementar a Assinatura de Código (SHA-256) para garantir a integridade dos módulos no disco.
+1. Realizar Push para o GitHub (Snapshot 1.6.3).
+2. Desenvolvimento da Skill Calculadora para testar o fluxo completo de criação e auto-assinatura.
 
 ---
-**Última Atualização:** 18/04/2026 11:35:00
+**Última Atualização:** 18/04/2026 11:50:00
