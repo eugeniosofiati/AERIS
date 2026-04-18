@@ -1,6 +1,6 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v1.6.3 (Environment Salt & Infrastructure Hardening)  
+**Documento de Referência:** v1.7.0 (Dynamic Skill Engine & Argument Parsing Homologated)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
 **Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação. Se o assistente perder o contexto, o conteúdo anterior deve ser reenviado pelo usuário para reintegração.
 
@@ -15,10 +15,10 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 3. **Skills:** Interfaces de habilidades funcionais (ex: Execução de Scripts).
 4. **Sub-skills:** Unidades técnicas atômicas (ex: Sanitização de comandos, Validação de sintaxe).
 
-### 🛡️ Blindagem de Soberania (v1.6.3+):
+### 🛡️ Blindagem de Soberania (v1.7.0+):
 * **Core (Cérebro Fixo):** Estilo, Segurança, Contexto, Auditoria, QA de Saída e Gatekeeper.
 * **Integridade Dinâmica:** Validação SHA-256 via Salt injetado por Variável de Ambiente (`AERIS_SALT`).
-* **Resiliência:** Container configurado com `tty: true` e `tail -f` para persistência de serviço.
+* **Motor de Parsing:** Sistema de captura de argumentos pós-gatilho funcional (`argumentos = " ".join(partes[1:])`).
 
 ---
 
@@ -68,6 +68,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 ### [FASE 5] AUTO-PROVISIONAMENTO (Cognição Ativa)
 - [x] **[DEV] Consciência de Lacuna:** Detecção de comandos órfãos e proposição (v1.5.7).
 - [x] **[DEV] Módulo Criador (Base):** Fábrica de escrita de arquivos `.py`.
+- [x] **[DEV] Skill Calculadora (v1.7.0):** Primeira skill dinâmica homologada com argumentos.
 - [ ] **[DEV] Sandbox de Criação:** Validação de sintaxe antes da persistência física.
 - [ ] **[DEV] Hot-Load Integration:** Carregamento sem restart.
 
@@ -91,16 +92,15 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 * **Snapshot 1.5.5:** Implementação da Telemetria de Hardware Real.
 * **Snapshot 1.5.6:** Homologação da Ponte Docker-Host e Auditoria Imutável (ID 12).
 * **Snapshot 1.5.9:** Homologação do Roteamento por Gatilhos Dinâmicos (Skill Triggers) via Banco de Dados.
-* **Snapshot 1.6.0:** Homologação da Etapa 8 (QA de Saída). Blindagem contra vazamento de senhas.
-* **Snapshot 1.6.1:** Homologação da Etapa 2 (Gatekeeper). Validação de identidade via DB para controle de soberania.
-* **Snapshot 1.6.2:** Homologação da Imutabilidade via Salted Hash (Bloqueio de arquivos adulterados).
-* **Snapshot 1.6.3:** Migração do Salt para Variável de Ambiente e Hardening do Container Docker.
+* **Snapshot 1.6.1:** Homologação da Etapa 2 (Gatekeeper). Validação de identidade via DB.
+* **Snapshot 1.6.3:** Migração do Salt para Variável de Ambiente e Hardening do Docker.
+* **Snapshot 1.7.0:** Homologação do Motor de Argumentos Dinâmicos e primeira Skill (Calculadora) operacional.
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. Realizar Push para o GitHub (Snapshot 1.6.3).
-2. Desenvolvimento da Skill Calculadora para testar o fluxo completo de criação e auto-assinatura.
+1. Realizar Push para o GitHub (Snapshot 1.7.0).
+2. Iniciar o desenvolvimento da Camada de Persistência (Fase 2) para que o AERIS possa "lembrar" de operações passadas.
 
 ---
-**Última Atualização:** 18/04/2026 11:50:00
+**Última Atualização:** 18/04/2026 12:05:00

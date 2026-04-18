@@ -16,7 +16,6 @@ class OrchestratorAeris:
         self.contexto = ContextoMódulo(self)
         self.diretorio_modulos = "src/modulos/"
         self.estado = "BASE"
-        # SALT RECUPERADO DA VARIÁVEL DE AMBIENTE DO DOCKER
         self.__salt = os.getenv('AERIS_SALT', '') 
         
     def conectar_db(self):
@@ -49,7 +48,11 @@ class OrchestratorAeris:
             return None
 
     def buscar_modulo_por_gatilho(self, comando):
-        trigger_input = comando.split()[0].lower()
+        partes = comando.split()
+        if not partes: return None, None, None
+        trigger_input = partes[0].lower()
+        argumentos = " ".join(partes[1:]) # Captura tudo após o 'calc'
+        
         try:
             conn = self.conectar_db()
             cursor = conn.cursor()
@@ -58,16 +61,15 @@ class OrchestratorAeris:
             cursor.close()
             conn.close()
             if res:
-                return f"modulo_{res[0]}.py", res[1]
+                return f"modulo_{res[0]}.py", res[1], argumentos
         except:
-            return None, None
+            return None, None, None
 
     def carregar_modulo_dinamico(self, nome_arquivo, hash_esperado):
         if not nome_arquivo: return None
         caminho_completo = os.path.join(self.diretorio_modulos, nome_arquivo)
         
         if os.path.exists(caminho_completo):
-            # VALIDAÇÃO DE INTEGRIDADE
             hash_atual = self.calcular_hash_modulo(caminho_completo)
             if hash_esperado and hash_atual != hash_esperado:
                 return "ERR_INTEGRITY"
@@ -79,13 +81,11 @@ class OrchestratorAeris:
         return None
 
     def pipeline_de_execucao(self, input_bruto, usuario_id):
-        # Etapa 2: Gatekeeper
         role = self.buscar_role_usuario(usuario_id)
         if not role:
             return self.estilo.formatar_saida("Acesso Negado.", "SISTEMA"), "FORBIDDEN"
 
-        # Etapa 5: Seleção e Etapa 4: Integridade
-        nome_arquivo, hash_esperado = self.buscar_modulo_por_gatilho(input_bruto)
+        nome_arquivo, hash_esperado, argumentos = self.buscar_modulo_por_gatilho(input_bruto)
         skill = self.carregar_modulo_dinamico(nome_arquivo, hash_esperado)
         
         if skill == "ERR_INTEGRITY":
@@ -93,15 +93,8 @@ class OrchestratorAeris:
         
         if skill:
             try:
-                # Restrição Mestre
-                if "status" in nome_arquivo and role != "MESTRE":
-                    return self.estilo.formatar_saida("Nível insuficiente.", "SISTEMA"), "UNAUTHORIZED"
-                
-                resultado = skill.executar()
-                # Etapa 8: QA de Saída (Filtro simples integrado)
-                if any(x in str(resultado) for x in ["Password", "Smg955fd!@"]):
-                    resultado = "[CONTEÚDO SENSÍVEL FILTRADO]"
-                
+                # Agora passamos os argumentos capturados para a Skill
+                resultado = skill.executar(argumentos)
                 return self.estilo.formatar_saida(resultado, "MESTRE"), None
             except Exception as e:
                 return self.estilo.formatar_saida(f"Erro: {e}", "SISTEMA"), "ERR"
