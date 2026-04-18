@@ -1,6 +1,6 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v1.7.5 (Persistent Memory Layer Homologated)  
+**Documento de Referência:** v1.8.0 (Code Sandbox & Syntax Validation Homologated)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
 **Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação. Se o assistente perder o contexto, o conteúdo anterior deve ser reenviado pelo usuário para reintegração.
 
@@ -15,11 +15,12 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 3. **Skills:** Interfaces de habilidades funcionais (ex: Execução de Scripts).
 4. **Sub-skills:** Unidades técnicas atômicas (ex: Sanitização de comandos, Validação de sintaxe).
 
-### 🛡️ Blindagem de Soberania (v1.7.5+):
+### 🛡️ Blindagem de Soberania (v1.8.0+):
 * **Core (Cérebro Fixo):** Estilo, Segurança, Contexto, Auditoria, QA de Saída e Gatekeeper.
 * **Integridade Dinâmica:** Validação SHA-256 via Salt injetado por Variável de Ambiente (`AERIS_SALT`).
 * **Memória Permanente:** Camada de Persistência criptografada (AES-256) via MySQL em `contexto_persistente`.
-* **Motor de Parsing:** Sistema de captura de argumentos pós-gatilho funcional (`argumentos = " ".join(partes[1:])`).
+* **Motor de Parsing:** Sistema de captura de argumentos pós-gatilho funcional.
+* **Sandbox de Criação:** Validação de sintaxe via `ast.parse` integrada ao Orquestrador (v1.8.0).
 
 ---
 
@@ -70,7 +71,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DEV] Consciência de Lacuna:** Detecção de comandos órfãos e proposição (v1.5.7).
 - [x] **[DEV] Módulo Criador (Base):** Fábrica de escrita de arquivos `.py`.
 - [x] **[DEV] Skill Calculadora (v1.7.0):** Primeira skill dinâmica homologada com argumentos.
-- [ ] **[DEV] Sandbox de Criação:** Validação de sintaxe antes da persistência física.
+- [x] **[DEV] Sandbox de Criação:** Validação de sintaxe via AST homologada (v1.8.0).
 - [ ] **[DEV] Hot-Load Integration:** Carregamento sem restart.
 
 ---
@@ -89,16 +90,15 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 ---
 
 ## 📑 HISTÓRICO DE ENTREGAS E VALIDAÇÕES
-* **Snapshot 1.6.1:** Homologação da Etapa 2 (Gatekeeper). Validação de identidade via DB.
-* **Snapshot 1.6.3:** Migração do Salt para Variável de Ambiente e Hardening do Docker.
-* **Snapshot 1.7.0:** Homologação do Motor de Argumentos Dinâmicos e primeira Skill (Calculadora) operacional.
-* **Snapshot 1.7.5:** Homologação da Camada de Persistência Criptografada. Teste de gravação e recuperação de contexto 'projeto_foco' concluído com sucesso.
+* **Snapshot 1.7.0:** Homologação do Motor de Argumentos Dinâmicos e Skill Calculadora.
+* **Snapshot 1.7.5:** Homologação da Camada de Persistência Criptografada.
+* **Snapshot 1.8.0:** Homologação do Sandbox de Criação. Bloqueio de código inválido verificado via testes de terminal com sucesso.
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. Realizar Push para o GitHub (Snapshot 1.7.5).
-2. Integração da Memória Permanente na Skill Calculadora para persistência de variáveis e resultados históricos.
+1. Realizar Push para o GitHub (Snapshot 1.8.0).
+2. Integração da Memória Permanente na Skill Calculadora para persistência de variáveis.
 
 ---
-**Última Atualização:** 18/04/2026 12:45:00
+**Última Atualização:** 18/04/2026 13:05:00
