@@ -3,3 +3,4 @@ python-dotenv
 cryptography
 cryptography
 cryptography
+psutil
