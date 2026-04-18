@@ -1,6 +1,6 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v1.6.0 (Output QA & Security Hardening Homologated)  
+**Documento de Referência:** v1.6.1 (Gatekeeper Identity Validation Homologated)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
 **Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação. Se o assistente perder o contexto, o conteúdo anterior deve ser reenviado pelo usuário para reintegração.
 
@@ -16,7 +16,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 4. **Sub-skills:** Unidades técnicas atômicas (ex: Sanitização de comandos, Validação de sintaxe).
 
 ### 🛡️ Divisão de Soberania (v1.5.5+):
-* **Core (Cérebro Fixo):** Estilo, Segurança, Contexto, Auditoria e **QA de Saída**.
+* **Core (Cérebro Fixo):** Estilo, Segurança, Contexto, Auditoria, QA de Saída e **Gatekeeper**.
 * **Slots (Skills Dinâmicas):** Telemetria e habilidades auto-geradas. Carregados via `importlib`.
 
 ---
@@ -47,7 +47,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DBA] Conectividade Host-Container:** Homologação via `host.docker.internal` com usuário `geninho`.
 - [x] **[DBA] Auditoria Imutável:** Tabela `auditoria_imutavel` funcional (Etapa 10).
 - [x] **[DEV] Core de Contexto:** Gestão de memórias encriptadas operacional.
-- [ ] **[DBA] Modelagem Relacional:** Tabelas `usuarios_autorizados` e contextos.
+- [x] **[DBA] Modelagem Relacional:** Tabelas `usuarios_autorizados` (id, nome, role, criado_em, status) e contextos criadas.
 - [ ] **[DEV] Camada de Persistência:** Implementar CRUD com AES-256.
 
 ### [FASE 3] O AGENTE & PIPELINE DE EXECUÇÃO (O Cérebro)
@@ -55,7 +55,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DEV] Mapeamento Dinâmico:** Etapas 5 e 6 (Carga em tempo real).
 - [x] **[DBA] Skill Triggers:** Tabela para múltiplos gatilhos por slot funcional (Sinônimo 'sistema' -> 'status').
 - [x] **[DEV] QA de Saída (Etapa 8):** Filtro contra exposição de dados sensíveis homologado (v1.6.0).
-- [ ] **[DEV] Gatekeeper (Etapa 2):** Validação rígida de Role (Mestre vs Visitante).
+- [x] **[DEV] Gatekeeper (Etapa 2):** Validação rígida de Role (Mestre vs Visitante) integrada ao DB (v1.6.1).
 - [ ] **[DEV] Pipeline Completo:** Integração das 10 etapas remanescentes.
 
 ### [FASE 4] MELHORIAS, TELEMETRIA & MEED (Evolução)
@@ -89,16 +89,15 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 * **Snapshot 1.3.9:** Estabilização de Ciclo de Vida (Signal Handling).
 * **Snapshot 1.5.5:** Implementação da Telemetria de Hardware Real.
 * **Snapshot 1.5.6:** Homologação da Ponte Docker-Host e Auditoria Imutável (ID 12).
-* **Snapshot 1.5.7:** Homologação da Consciência de Lacuna (Proposição 'calculadora').
-* **Snapshot 1.5.8:** Revisão de Excelência: Inclusão de QA de Saída e Integridade de Código no backlog.
 * **Snapshot 1.5.9:** Homologação do Roteamento por Gatilhos Dinâmicos (Skill Triggers) via Banco de Dados.
-* **Snapshot 1.6.0:** Homologação da Etapa 8 (QA de Saída). Blindagem contra vazamento de senhas e logs técnicos confirmada.
+* **Snapshot 1.6.0:** Homologação da Etapa 8 (QA de Saída). Blindagem contra vazamento de senhas.
+* **Snapshot 1.6.1:** Homologação da Etapa 2 (Gatekeeper). Validação de identidade via DB para controle de soberania.
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. Atualizar o repositório GIT com o estado atual do Snapshot 1.6.0.
-2. Implementar a Etapa 2 (Gatekeeper) para validação rígida de autoridade.
+1. Atualizar o repositório GIT com o estado atual do Snapshot 1.6.1.
+2. Implementar a Assinatura de Código (SHA-256) para garantir a integridade dos módulos no disco.
 
 ---
-**Última Atualização:** 18/04/2026 11:28:10
+**Última Atualização:** 18/04/2026 11:35:00

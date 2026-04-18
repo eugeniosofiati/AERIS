@@ -37,6 +37,21 @@ class OrchestratorAeris:
         except Exception as e:
             print(f"[ERRO AUDITORIA]: {e}")
 
+    def buscar_role_usuario(self, usuario_id):
+        """Etapa 2: Gatekeeper - Validação baseada na estrutura real do Mestre"""
+        try:
+            conn = self.conectar_db()
+            cursor = conn.cursor()
+            # Ajustado para usar a coluna 'status' como tinyint (1 = Ativo)
+            cursor.execute("SELECT role FROM usuarios_autorizados WHERE id = %s AND status = 1", (usuario_id,))
+            res = cursor.fetchone()
+            cursor.close()
+            conn.close()
+            return res[0] if res else None
+        except Exception as e:
+            print(f"[ERRO GATEKEEPER]: {e}")
+            return None
+
     def buscar_modulo_por_gatilho(self, comando):
         trigger_input = comando.split()[0].lower()
         nome_arquivo_alvo = None
@@ -65,7 +80,6 @@ class OrchestratorAeris:
         return None
 
     def qa_de_saida(self, conteudo_bruto):
-        """Etapa 8: Sanitização de saída técnica"""
         padroes_bloqueio = [
             r"mysql\.connector", r"Traceback", r"File \"/.*\"",
             r"Password", r"Secret", r"Key", r"172\.\d+\.\d+\.\d+",
@@ -77,20 +91,29 @@ class OrchestratorAeris:
             if re.search(padrao, saida_limpa, re.IGNORECASE):
                 saida_limpa = re.sub(padrao, "[DADO PROTEGIDO]", saida_limpa, flags=re.IGNORECASE)
                 detectado = True
-        if detectado:
-            return f"⚠️ [ALERTA DE SEGURANÇA]: Conteúdo técnico filtrado pelo QA de Saída.\n\n{saida_limpa}"
-        return saida_limpa
+        return f"⚠️ [ALERTA DE SEGURANÇA]: Conteúdo filtrado.\n\n{saida_limpa}" if detectado else saida_limpa
 
     def pipeline_de_execucao(self, input_bruto, usuario_id):
-        status = "SUCCESS"
-        erro_log = None
+        # ETAPA 2: Gatekeeper
+        role = self.buscar_role_usuario(usuario_id)
+        if not role:
+            return self.estilo.formatar_saida("Acesso Negado: Identidade não autorizada no banco de dados.", "SISTEMA"), "FORBIDDEN"
+
         nome_arquivo = self.buscar_modulo_por_gatilho(input_bruto)
         skill = self.carregar_modulo_dinamico(nome_arquivo)
+        
+        status = "SUCCESS"
+        erro_log = None
+        
         if skill:
             try:
-                resultado_bruto = skill.executar()
-                resultado_sanitizado = self.qa_de_saida(resultado_bruto)
-                resposta_final = self.estilo.formatar_saida(resultado_sanitizado, "MESTRE")
+                # Restrição: Somente Mestre acessa status do sistema
+                if "status" in nome_arquivo and role != "MESTRE":
+                     resposta_final = self.estilo.formatar_saida("Nível de acesso insuficiente para este módulo.", "SISTEMA")
+                else:
+                    resultado_bruto = skill.executar()
+                    resultado_sanitizado = self.qa_de_saida(resultado_bruto)
+                    resposta_final = self.estilo.formatar_saida(resultado_sanitizado, "MESTRE" if role == "MESTRE" else "VISITANTE")
             except Exception as e:
                 status = "ERRO"
                 erro_log = str(e)
@@ -99,5 +122,6 @@ class OrchestratorAeris:
             status = "ERRO"
             msg = f"Habilidade '{input_bruto}' não localizada. Deseja que eu a desenvolva?"
             resposta_final = self.estilo.formatar_saida(msg, "SISTEMA")
+
         self.registrar_auditoria(usuario_id, input_bruto, status, erro_log)
         return resposta_final, erro_log
