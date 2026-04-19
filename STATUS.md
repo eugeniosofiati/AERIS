@@ -1,58 +1,73 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v2.5.0 (Sentinela Financeira e Inteligência Proativa Homologada)  
+**Documento de Referência:** v2.5.1 (Consolidação de Fases e Inteligência Proativa)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
-**Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação. Se o assistente perder o contexto, o conteúdo anterior deve ser reenviado pelo usuário para reintegração.
+**Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação.
 
 ---
 
 ## 🏗️ ARQUITETURA DO ECOSSISTEMA
-O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo central coordena sistemas independentes através de um pipeline de 10 etapas, agora com **Persistência Criptografada AES-256** ativa.
+O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo central coordena sistemas independentes através de um pipeline de 10 etapas.
 
 ### Hierarquia de Componentes:
-1. **Orquestrador:** Cérebro executivo (Ativo em container Docker). Único ponto de contato entre módulos.
-2. **Módulos (20 Sistemas):** Unidades lógicas de processamento (Contexto, Segurança, Auditoria, etc).
-3. **Skills:** Interfaces de habilidades funcionais (ex: Execução de Scripts, Gestão Financeira).
-4. **Sub-skills:** Unidades técnicas atômicas (ex: Sanitização, Validação SHA-256, Decodificação Fernet).
+1. **Orquestrador:** Cérebro executivo (Saída Minimalista/Mestre).
+2. **Módulos:** Unidades lógicas de processamento (Contexto, Segurança, Auditoria).
+3. **Skills:** Interfaces de habilidades funcionais (Financeiro, Execução, etc).
+4. **Sub-skills:** Unidades técnicas atômicas (Sanitização, Decodificação, SHA-256).
 
 ---
 
 ## 🛠️ BACKLOG DE DESENVOLVIMENTO (FASES)
 
-### [FASE 1] INFRAESTRUTURA & CORE
-- [x] **[DEV] Fix de Shutdown:** Resolução do erro 137 (SIGTERM).
-- [x] **[FIX] Patch de Tipagem Criptográfica [1.3.4]:** Correção em `contexto.py` para tratar tipos `bytes` no MySQL, eliminando erro de `AttributeError` em descriptografia.
+### [FASE 0] PREPARAÇÃO E LIMPEZA (GREENFIELD)
+- [x] **[INFRA] Limpeza Local:** Deleção total do diretório antigo em `/opt/AERIS`.
+- [x] **[DBA] Reset de Dados:** Deleção da base MySQL e usuários antigos.
+- [x] **[INFRA] Purga de Repositório:** Deleção do repositório antigo para reset de histórico.
+- [x] **[INFRA] Novo Repositório:** Recriação no GitHub (eugeniosofiati/AERIS).
+
+### [FASE 1] INFRAESTRUTURA & CORE (O Esqueleto)
+- [x] **[INFRA] Estrutura Física:** Criação dos diretórios `src/`, `config/`, `data/`, `logs/` e `tests/`.
+- [x] **[INFRA] Dockerização:** Criação de `Dockerfile` e `docker-compose.yml` com rede `host-gateway`.
+- [x] **[DEV] Fix de Importação:** Injeção de `PYTHONPATH=/app`.
+- [x] **[DEV] Shutdown Gracioso:** Resolução do erro 137 (SIGTERM/SIGINT).
+- [x] **[FIX] Patch de Tipagem [1.3.4]:** Normalização de bytes no Core (`contexto.py`).
+- [x] **[REF] Refatoração de Logs:** Limpeza de prints de debug para interface Mestre.
+
+### [FASE 2] BANCO DE DADOS & PERSISTÊNCIA (O Sistema Nervoso)
+- [x] **[DBA] Conectividade Host-Container:** Homologação via `host.docker.internal:3306`.
+- [ ] **[DBA] Modelagem Relacional Avançada:** Expansão para contexto profundo e imutável.
+- [x] **[DEV] Camada de Persistência:** Implementação de criptografia AES-256 (Fernet) funcional.
+
+### [FASE 3] O AGENTE & PIPELINE DE EXECUÇÃO (O Cérebro)
+- [x] **[DEV] Skill de Execução & Sub-skill de Sanitização:** Restauração e integração base.
+- [ ] **[DEV] Pipeline de 10 Etapas:** Fluxo completo de Identificação -> Estilo -> Registro.
+
+### [FASE 4] MELHORIAS, TELEMETRIA & MEED (Evolução)
+- [x] **[DEV] Módulo MEED:** Motor de sugestão de habilidades funcional.
+- [x] **[DEV] Ponte MEED-Instalador:** `modulo_evoluir.py` operacional.
+- [x] **[SEC] Filtro Heurístico:** Bloqueio de comandos perigosos no Instalador.
 
 ### [FASE 5] AUTO-PROVISIONAMENTO (Cognição Ativa)
-- [x] **[DEV] Módulo Instalador:** Framework de instalação automatizada com validação dupla (Sintaxe + Segurança).
-- [x] **[DEV] Singularidade Operacional:** Skill `fatura_cartao` criada e instalada via comando `evoluir`.
-- [x] **[DEV] Persistência Real:** Integração com `salvar_memoria` para escrita no MySQL local via AES-256.
+- [x] **[DEV] Sandbox de Criação:** Validação via AST homologada.
+- [x] **[DEV] Módulo Instalador:** Framework de instalação automatizada.
+- [x] **[DEV] Singularidade Operacional:** Skill `fatura_cartao` instalada via comando `evoluir`.
 
-### [FASE 6] INTELIGÊNCIA FINANCEIRA & RELATÓRIOS (Nova)
-- [x] **[DEV] Skill fatura_relatorio v2.5.0:** Implementação de inteligência proativa com indicadores comparativos (Real vs Meta).
-- [x] **[DEV] Skill fatura_limite:** Habilidade de definir metas orçamentárias persistentes por categoria.
-- [x] **[QA] Alertas Visuais:** Homologação de escala de cores (🟢/🟡/🔴) baseada no consumo do teto de gastos.
+### [FASE 6] INTELIGÊNCIA FINANCEIRA & RELATÓRIOS
+- [x] **[DEV] Skill fatura_relatorio v2.5.0:** Painel comparativo com indicadores 🟢/🟡/🔴.
+- [x] **[DEV] Skill fatura_limite:** Gestão de metas orçamentárias persistentes.
+- [x] **[QA] Teste de Estresse:** Homologação de alerta de estouro (Saúde: 110%).
 
 ---
 
 ## 📑 HISTÓRICO DE ENTREGAS E VALIDAÇÕES
-
-### Snapshots 1.2 a 1.3.9 - Infraestrutura e Conectividade (18/04/2026)
-* **Status:** CONCLUÍDO ✅
-* **Ação:** Reset do ecossistema, Dockerização, conexão Host-Gateway e estabilização de ciclo de vida.
-
-### Snapshot 2.4.0 - A Era da Persistência (19/04/2026)
-* **Status:** CONCLUÍDO ✅
-* **Ação:** Aplicação do patch de criptografia no Core e primeira gravação bem-sucedida de gastos no banco local.
-
-### Snapshot 2.5.0 - Inteligência Proativa (Hoje)
-* **Status:** CONCLUÍDO ✅
-* **Ação:** Deploy das skills de monitoramento. Validação de painel financeiro com teto de gastos:
-    - Alimentação: R$ 25.50 / R$ 500.00 (5.1%) 🟢
-    - Saúde: R$ 80.00 / R$ 300.00 (26.7%) 🟢
+* **Snapshot 1.3.9:** Estabilização de Ciclo de Vida e Redução de Restart.
+* **Snapshot 2.4.0:** A Era da Persistência (Criptografia e DB Local).
+* **Snapshot 2.5.1:** Inteligência Proativa e Refatoração de Interface.
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. **Auditoria de Logs:** Revisar saída do Orquestrador para remover prints de debug residuais.
-2. **Sincronização Git:** Consolidar todas as novas skills e patches no repositório remoto.
+1. **Modelagem de Contexto Profundo:** Expandir Fase 2 para suportar fatos não-financeiros.
+2. **Segurança:** Implementar backup criptografado do banco de dados.
+
+**Última Atualização:** 19/04/2026 01:41:00
