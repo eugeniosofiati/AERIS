@@ -1,6 +1,6 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v2.6.1 (Soberania de Autoridade & Purificação Git)  
+**Documento de Referência:** v2.6.2 (Auditoria Imutável & Blindagem de Contexto)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
 **Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação.
 
@@ -36,11 +36,12 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 ### [FASE 2] BANCO DE DADOS & PERSISTÊNCIA (O Sistema Nervoso)
 - [x] **[DBA] Conectividade Host-Container:** Homologação via host.docker.internal:3306.
 - [x] **[DBA] Modelagem Relacional Avançada:** Expansão para contexto profundo e imutável.
-- [x] **[DEV] Camada de Persistência:** Implementação de criptografia AES-256 (Fernet) funcional.
+- [x] **[DEV] Camada de Persistência:** Implementação de criptografia AES-256 (Fernet) funcional via Variáveis de Ambiente.
 
 ### [FASE 3] O AGENTE & PIPELINE DE EXECUÇÃO (O Cérebro)
 - [x] **[DEV] Skill de Execução & Sub-skill de Sanitização:** Restauração e integração base.
 - [x] **[SEC] Gatekeeper de Integridade:** Validação de Skill via Hash SHA-256 + Salt.
+- [x] **[DEV] Auditoria Imutável:** Módulo de registro permanente operacional com classificação de níveis (INFO/AVISO/CRÍTICO).
 - [ ] **[DEV] Pipeline de 10 Etapas:** Fluxo completo de Identificação -> Estilo -> Registro.
 
 ### [FASE 4] MELHORIAS, TELEMETRIA & MEED (Evolução)
@@ -62,12 +63,12 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[INFRA] Purificação MySQL:** Expurgado binários MariaDB; espelhamento físico de mysqldump v8.0.45 do Host (Ubuntu) para o Container.
 - [x] **[SEC] Homologação de Backup:** Skill backup funcional com bypass de TLS (--ssl-mode=DISABLED).
 - [x] **[INFRA] Governança de Arquivos:** Organização de diretórios de dados e correção de permissões (User: geninho).
-- [x] **[INFRA] Auditoria Git:** Purificação do repositório; remoção de 96k+ linhas de artefatos de build e binários fantasmas.
+- [x] **[INFRA] Auditoria Git:** Purificação do repositório; remoção de artefatos legados.
 
 ### [FASE 8] CONSCIÊNCIA DE AUTORIDADE (ENTREGA ATUAL)
 - [x] **[DBA] Mapeamento de Mestre:** Registro do ID 0 (Geninho) na tabela usuarios_autorizados.
-- [x] **[DBA] Injeção de Diretrizes:** Registro de diretriz_primaria e metadados de sistema no banco.
-- [x] **[DEV] Orquestrador v2.6.1:** Fusão de lógica de integridade com reconhecimento dinâmico de autoridade e contexto.
+- [x] **[DBA] Evolução de Esquema:** Reestruturação da tabela auditoria_imutavel para suporte a metadados dinâmicos.
+- [x] **[DEV] Orquestrador v2.6.2:** Integração do fluxo de auditoria sistêmica e reconhecimento de diretrizes.
 - [ ] **[INFRA] Persistência de Boot:** Automatizar ENTRYPOINT do Orquestrador (Mudar de tail para python3).
 
 ---
@@ -78,11 +79,12 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 * **Snapshot 2.5.1:** Inteligência Proativa e Refatoração de Interface.
 * **Snapshot 2.6.0:** Soberania de Dados e Purificação da Pilha MySQL 8.0.
 * **Snapshot 2.6.1:** Despertar da Autoridade e Reconhecimento de Contexto via DB.
+* **Snapshot 2.6.2:** Auditoria Permanente e Blindagem de Dados Funcional.
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. **[Git]** Sincronizar v2.6.1 com o repositório remoto (Purificação e Novos Metadados).
-2. **[SEC]** Implementação de Criptografia AES-256 automática no Módulo de Contexto para novos fatos.
+1. **[Git]** Sincronizar v2.6.2 com o repositório remoto.
+2. **[DEV]** Expandir o Pipeline de Execução para registrar tentativas de comando na Auditoria.
 
-**Última Atualização:** 19/04/2026 03:15:00
+**Última Atualização:** 19/04/2026 03:45:00
