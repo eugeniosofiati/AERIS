@@ -1,6 +1,8 @@
 import os
 import hashlib
 import mysql.connector
+import time
+import signal
 from src.modulos.core.estilo import EstiloMódulo
 from src.modulos.core.contexto import ContextoMódulo
 from src.modulos.core.sandbox import SandboxMódulo
@@ -9,13 +11,27 @@ from src.modulos.core.meed import MEEDModule
 
 class OrchestratorAeris:
     def __init__(self):
+        self.running = True
         self.salt = os.getenv("AERIS_SALT", "aerisdebauruparaomundo")
         self.diretorio_modulos = "src/modulos"
+        
+        # Instanciação de Módulos Core
         self.estilo = EstiloMódulo()
         self.contexto = ContextoMódulo(self)
         self.sandbox = SandboxMódulo(self)
         self.instalador = InstaladorModule(self)
         self.meed = MEEDModule(self)
+        
+        # Configurações de Identidade
+        self.mestre_id = 0
+        self.contexto_sistema = {}
+        
+        # Sinais de encerramento (Graceful Shutdown)
+        signal.signal(signal.SIGINT, self.stop)
+        signal.signal(signal.SIGTERM, self.stop)
+        
+        # Iniciar Soberania
+        self.carregar_soberania()
 
     def conectar_db(self):
         return mysql.connector.connect(
@@ -24,6 +40,38 @@ class OrchestratorAeris:
             password=os.getenv("DB_PASSWORD", "Smg955fd!@"),
             database=os.getenv("DB_NAME", "aeris_db")
         )
+
+    def carregar_soberania(self):
+        """Valida o Mestre e carrega as diretrizes primárias do banco"""
+        conn = None
+        try:
+            conn = self.conectar_db()
+            cursor = conn.cursor(dictionary=True)
+            
+            # 1. Validar Mestre
+            cursor.execute("SELECT nome, role FROM usuarios_autorizados WHERE id = %s AND status = 1", (self.mestre_id,))
+            mestre = cursor.fetchone()
+            if mestre and mestre['role'] == 'MESTRE':
+                print(f"👑 Autoridade Confirmada: Mestre {mestre['nome']}")
+            
+            # 2. Carregar Contexto e Diretrizes
+            cursor.execute("SELECT chave, valor_blob FROM contexto_persistente WHERE tipo IN ('SISTEMA', 'DIRETRIZ')")
+            for row in cursor.fetchall():
+                valor = row['valor_blob'].decode('utf-8') if isinstance(row['valor_blob'], bytes) else row['valor_blob']
+                self.contexto_sistema[row['chave']] = valor
+            
+            if self.contexto_sistema:
+                print(f"🛡️ Diretriz Ativa: {self.contexto_sistema.get('diretriz_primaria', 'Nenhuma')}")
+                
+            cursor.close()
+        except Exception as e:
+            print(f"⚠️ Erro ao carregar soberania: {e}")
+        finally:
+            if conn: conn.close()
+
+    def stop(self, signum, frame):
+        print("\n🛑 Encerrando AERIS (Graceful Shutdown)...")
+        self.running = False
 
     def buscar_modulo_por_gatilho(self, input_bruto):
         gatilho = input_bruto.split()[0].lower()
@@ -46,14 +94,14 @@ class OrchestratorAeris:
         if not resultado_busca:
             self.meed.registrar_lacuna(input_bruto, usuario_id)
             return self.estilo.formatar_saida(f"Não localizado: {input_bruto}. Intenção registrada.", "SISTEMA"), "NOT_FOUND"
-        
+
         nome_arquivo, hash_esperado, argumentos = resultado_busca
         caminho_modulo = os.path.join(self.diretorio_modulos, nome_arquivo)
 
         if os.path.exists(caminho_modulo):
             with open(caminho_modulo, "r") as f:
                 conteudo_bruto = f.read().strip()
-            
+
             hash_calculado = hashlib.sha256(conteudo_bruto.encode() + self.salt.encode()).hexdigest()
 
             if hash_calculado != hash_esperado:
@@ -65,5 +113,15 @@ class OrchestratorAeris:
             spec.loader.exec_module(modulo)
             skill = modulo.SkillModule(self)
             return self.estilo.formatar_saida(skill.executar(argumentos), "MESTRE"), "SUCCESS"
-        
+
         return "Erro físico: arquivo não encontrado.", "FILE_ERROR"
+
+    def run(self):
+        print(f"🚀 {self.contexto_sistema.get('projeto_nome', 'AERIS')} Iniciado...")
+        while self.running:
+            time.sleep(1)
+        print("💤 Sistema offline.")
+
+if __name__ == "__main__":
+    aeris = OrchestratorAeris()
+    aeris.run()
