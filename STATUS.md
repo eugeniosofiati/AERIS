@@ -59,7 +59,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DEV] Skill fatura_limite:** Gestão de metas orçamentárias persistentes.
 - [x] **[QA] Teste de Estresse:** Homologação de alerta de estouro (Saúde: 110%).
 
-### [FASE 7] SOBERANIA DE DADOS & PURIFICAÇÃO (Entrega Concluída)
+### [FASE 7] SOBERANIA DE DADOS & PURIFICAÇÃO
 - [x] **[INFRA] Purificação MySQL:** Expurgado binários MariaDB; espelhamento físico de mysqldump v8.0.45 do Host (Ubuntu) para o Container.
 - [x] **[SEC] Homologação de Backup:** Skill backup funcional com bypass de TLS (--ssl-mode=DISABLED).
 - [x] **[INFRA] Governança de Arquivos:** Organização de diretórios de dados e correção de permissões (User: geninho).
@@ -69,7 +69,20 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DBA] Mapeamento de Mestre:** Registro do ID 0 (Geninho) na tabela usuarios_autorizados.
 - [x] **[DBA] Evolução de Esquema:** Reestruturação da tabela auditoria_imutavel para suporte a metadados dinâmicos.
 - [x] **[DEV] Orquestrador v2.6.2:** Integração do fluxo de auditoria sistêmica e reconhecimento de diretrizes.
+- [x] **[DEV] Loop de Despedida:** Implementação de encerramento amigável ("Tchau, Aeris").
+- [x] **[DEV] Persistência MEED:** Unificação de tabelas e correção do registro de lacunas (Lacuna ID 14 Homologada).
 - [ ] **[INFRA] Persistência de Boot:** Automatizar ENTRYPOINT do Orquestrador (Mudar de tail para python3).
+
+### [FASE 9] DISPONIBILIDADE E ACESSIBILIDADE (MELHORIAS FUTURAS)
+- [ ] **[INFRA] Auto-Start (Resiliência):** Configurar políticas de restart do Docker (unless-stopped) e Systemd para subida automática no boot do host.
+- [ ] **[WEB] Interface de Navegador:** Desenvolvimento de interface Web (Flask/FastAPI) para interação visual e remota.
+- [ ] **[NET] Acesso Ubíquo:** Implementação de Tunelamento Seguro (Cloudflare Tunnel ou VPN) para acesso de qualquer lugar com internet.
+- [ ] **[SEC] Autenticação Remota:** Camada de segurança MFA (Multi-Factor Authentication) para o dashboard web.
+
+### [FASE 10] PORTABILIDADE E SOBREVIVÊNCIA (MELHORIAS FUTURAS)
+- [ ] **[DBA] Migração Automatizada:** Script de exportação total (Dump + Estrutura + Configs) para fácil transição entre servidores/computadores.
+- [ ] **[INFRA] Disaster Recovery:** Rotina de backup automático para nuvem ou unidade externa criptografada.
+- [ ] **[DOC] Guia de Deployment Rápido:** Documentação para reconstrução total do ambiente em novo hardware com um comando único.
 
 ---
 
@@ -80,11 +93,13 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 * **Snapshot 2.6.0:** Soberania de Dados e Purificação da Pilha MySQL 8.0.
 * **Snapshot 2.6.1:** Despertar da Autoridade e Reconhecimento de Contexto via DB.
 * **Snapshot 2.6.2:** Auditoria Permanente e Blindagem de Dados Funcional.
+* **Snapshot 2.6.3:** Homologação da Memória Evolutiva (MEED Operacional).
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
 1. **[Git]** Sincronizar v2.6.2 com o repositório remoto.
-2. **[DEV]** Expandir o Pipeline de Execução para registrar tentativas de comando na Auditoria.
+2. **[INFRA]** Ajustar `docker-compose.yml` para política `restart: unless-stopped`.
+3. **[DEV]** Iniciar protótipo da Skill de Agenda (Tratamento de Lacuna ID 14).
 
-**Última Atualização:** 19/04/2026 03:45:00
+**Última Atualização:** 19/04/2026 04:25:00
