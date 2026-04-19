@@ -6,17 +6,17 @@ class MEEDModule:
         self.orchestrator = orchestrator
 
     def registrar_lacuna(self, comando, usuario_id):
-        """Registra um comando que o sistema não soube resolver."""
+        """Registra falhas na tabela meed_analise."""
         try:
             conn = self.orchestrator.conectar_db()
             cursor = conn.cursor()
-            
+
             sql = """
                 INSERT INTO meed_analise (comando_tentado, usuario_id)
                 VALUES (%s, %s)
-                ON DUPLICATE KEY UPDATE 
+                ON DUPLICATE KEY UPDATE
                     frequencia = frequencia + 1,
-                    status_proposto = 'em_analise'
+                    status_proposto = 'pendente'
             """
             cursor.execute(sql, (comando, usuario_id))
             conn.commit()
@@ -28,32 +28,21 @@ class MEEDModule:
             return False
 
     def sugerir_expansao(self):
-        """Analisa comandos frequentes e sugere criação ao Mestre."""
+        """Busca o que o Mestre mais pede e não tem."""
         try:
             conn = self.orchestrator.conectar_db()
             cursor = conn.cursor()
-            # Busca comandos que falharam mais de 2 vezes
-            cursor.execute("SELECT comando_tentado, frequencia FROM meed_analise WHERE status_proposto != 'skill_criada' AND frequencia >= 2 ORDER BY frequencia DESC")
+            cursor.execute("SELECT comando_tentado, frequencia FROM meed_analise WHERE status_proposto = 'pendente' AND frequencia >= 2 ORDER BY frequencia DESC")
             sugestoes = cursor.fetchall()
             cursor.close()
             conn.close()
-            
+
             if sugestoes:
                 lista = [f'{cmd} ({freq}x)' for cmd, freq in sugestoes]
-                return f'💡 MEED: Notei interesse recorrente em: { ", ".join(lista) }. Deseja converter em Skill?'
+                return f'💡 MEED: Sugestão de Skill: { ", ".join(lista) }.'
             return None
         except:
-            return Non
+            return None
+
     def gerar_esqueleto(self, nome_skill):
-        """Gera um boilerplate funcional para a nova skill."""
-        codigo = f"""
-class SkillModule:
-    def __init__(self, orchestrator):
-        self.orchestrator = orchestrator
-
-    def executar(self, argumentos=None):
-        # Mestre: Implemente a lógica para {nome_skill} aqui
-        return f'🚀 Skill {nome_skill} executada! Argumentos: {{argumentos}}'
-"""
-        return codigo.strip()
-
+        return f"class SkillModule:\n    def __init__(self, orchestrator):\n        self.orchestrator = orchestrator\n\n    def executar(self, argumentos=None):\n        return f'🚀 Skill {nome_skill} ativa!'"
