@@ -77,15 +77,14 @@ class OrchestratorAeris:
         """Encerramento limpo e imediato"""
         if not self.running:
             return
-        
+
         print("\n🛑 Encerrando AERIS (Graceful Shutdown)...")
         try:
             self.auditoria.registrar(self.mestre_id, 'AVISO', 'SISTEMA_SHUTDOWN', 'CORE', 'Encerramento solicitado.')
         except:
             pass
-            
+
         self.running = False
-        # os._exit força a saída ignorando threads bloqueadas (como o input)
         os._exit(0)
 
     def buscar_modulo_por_gatilho(self, input_bruto):
@@ -134,6 +133,7 @@ class OrchestratorAeris:
             spec.loader.exec_module(modulo)
             skill = modulo.SkillModule(self)
 
+            # Execução com argumentos higienizados
             resultado = skill.executar(argumentos)
             self.auditoria.registrar(usuario_id, 'INFO', 'EXEC_SUCESSO', nome_arquivo, f"Args: {argumentos}")
             return self.estilo.formatar_saida(resultado, "MESTRE"), "SUCCESS"
@@ -143,24 +143,19 @@ class OrchestratorAeris:
 
     def run(self):
         print(f"🚀 {self.contexto_sistema.get('projeto_nome', 'AERIS')} Iniciado...")
-        
-        # Lista de termos para despedida amigável
+
         termos_saida = ["tchau, aeris", "tchau aeris", "terminamos por aqui", "sair", "exit", "tchau"]
-        
+
         while self.running:
             try:
                 comando = input("👑 AERIS > ").strip()
-                
-                if not comando:
-                    continue
+                if not comando: continue
 
-                # Verificação de Despedida
                 if comando.lower() in termos_saida:
                     print("👋 Até logo, Mestre. Encerrando sistemas...")
                     self.stop(None, None)
                     break
 
-                # Processamento Normal
                 resultado, status = self.pipeline_de_execucao(comando)
                 print(resultado)
 
