@@ -1,6 +1,6 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v2.6.4 (Homologação de Skill Dinâmica & Persistência de Agenda)  
+**Documento de Referência:** v2.8.5 (Stealth Boot, Resiliência de Terminal & Web Bridge)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
 **Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação.
 
@@ -14,6 +14,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 2. **Módulos:** Unidades lógicas de processamento (Contexto, Segurança, Auditoria, MEED).
 3. **Skills:** Interfaces de habilidades funcionais (Financeiro, Execução, Backup, Agenda).
 4. **Sub-skills:** Unidades técnicas atômicas (Sanitização, Decodificação, SHA-256).
+5. **Bridge API:** Camada de tradução HTTP/Navegador para o Orquestrador.
 
 ---
 
@@ -67,36 +68,45 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[INFRA] Governança de Arquivos:** Organização de diretórios de dados e correção de permissões (User: geninho).
 - [x] **[INFRA] Auditoria Git:** Purificação do repositório; remoção de artefatos legados.
 
-### [FASE 8] CONSCIÊNCIA DE AUTORIDADE (ENTREGA ATUAL)
+### [FASE 8] CONSCIÊNCIA DE AUTORIDADE
 - [x] **[DBA] Mapeamento de Mestre:** Registro do ID 0 (Geninho) na tabela usuarios_autorizados.
 - [x] **[DBA] Evolução de Esquema:** Reestruturação da tabela auditoria_imutavel para suporte a metadados dinâmicos.
 - [x] **[DEV] Orquestrador v2.6.4:** Integração do fluxo de auditoria sistêmica e reconhecimento de diretrizes.
 - [x] **[DEV] Loop de Despedida:** Implementação de encerramento amigável ("Tchau, Aeris").
 - [x] **[DEV] Persistência MEED:** Unificação de tabelas e correção do registro de lacunas (Lacuna ID 14 Resolvida via Skill).
 
-### [FASE 9] DISPONIBILIDADE E ACESSIBILIDADE (MELHORIAS FUTURAS)
-- [ ] **[INFRA] Auto-Start (Resiliência):** Configurar políticas de restart do Docker (unless-stopped).
-- [ ] **[WEB] Interface de Navegador:** Desenvolvimento de interface Web (Flask/FastAPI).
-- [ ] **[NET] Acesso Ubíquo:** Tunelamento Seguro (Cloudflare/VPN).
+### [FASE 11] RESILIÊNCIA E PERSISTÊNCIA (BUNKER)
+- [x] **[INFRA] TMUX Integration:** Sessão aeris_core para persistência pós-desconexão.
+- [x] **[DEV] Stealth Boot:** Implementação de reinício silencioso (limpeza de buffer) em quedas de transporte (Exit Code 1).
+- [x] **[DEV] Shutdown Inteligente:** Separação lógica entre despedida voluntária (Exit Code 0) e queda acidental.
 
-### [FASE 10] PORTABILIDADE E SOBREVIVÊNCIA (MELHORIAS FUTURAS)
-- [ ] **[DBA] Migração Automatizada:** Script de exportação total.
-- [ ] **[DEV] Higiene Sistêmica:** Implementação do protocolo de "Desinstalação Destrutiva" para purga total de Skills e tabelas obsoletas (Zero Sujeira).
-- [ ] **[DEV] Skill de Governança (Sistema):** Módulo central para limpeza de lacunas resolvidas e purga de dados.
+### [FASE 12] AUTOMAÇÃO DE INTERFACE (CLI)
+- [x] **[INFRA] aeris.sh v3.0:** Script auto-referenciável para gestão de sessão bunker.
+- [x] **[SEC] Ambiente de Soberania:** Integração de AERIS_SECRET_KEY ao shell host para validação de contexto.
+
+### [FASE 13] BRIDGE WEB (INTERFACE VISUAL)
+- [x] **[API] FastAPI Bridge:** Criação do servidor para tradução de comandos via HTTP.
+- [x] **[DEV] Login de Soberania:** Implementação de tela de acesso restrito (login.html).
+- [x] **[DEV] Console Dashboard:** Interface retrô-terminal para interação browser-based.
+- [x] **[INFRA] aeris-web.sh:** Gestão de serviço web persistente via TMUX.
+
+### [FASE 14] ACESSO EXTERNO (EXPANSÃO)
+- [x] **[INST] Cloudflared Bin:** Instalação e verificação de versão do Cloudflare Tunnel.
+- [ ] **[AUTH] Cloudflare Handshake:** Autenticação e criação do túnel aeris-tunnel.
+- [ ] **[NET] DNS Routing:** Mapeamento do domínio externo para localhost:8000.
 
 ---
 
 ## 📑 HISTÓRICO DE ENTREGAS E VALIDAÇÕES
-* **Snapshot 1.3.9:** Estabilização de Ciclo de Vida e Redução de Restart.
-* **Snapshot 2.6.2:** Auditoria Permanente e Blindagem de Dados Funcional.
-* **Snapshot 2.6.3:** Homologação da Memória Evolutiva (MEED Operacional).
-* **Snapshot 2.6.4:** Validação da Skill de Agenda e Persistência de Dados no MySQL.
+* **Snapshot 2.6.4:** Validação da Skill de Agenda e Persistência no MySQL.
+* **Snapshot 2.7.5:** Homologação do Bunker TMUX e resiliência a quedas de SSH.
+* **Snapshot 2.8.5:** Estabilização da Web Bridge e Automação de Inicialização Dual (Terminal/Web).
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. **[Git]** Sincronizar v2.6.4 com o repositório remoto.
-2. **[DEV]** Criar Skill de Governança (modulo_sistema.py) para automatizar a limpeza de lacunas.
-3. **[DBA]** Limpeza manual da Lacuna ID 14 na tabela meed_analise.
+1. **[NET]** Concluir autenticação cloudflared tunnel login.
+2. **[Git]** Sincronizar v2.8.5 com repositório GitHub.
+3. **[SEC]** Implementar HTTPS via Cloudflare Tunnel no domínio oficial.
 
-**Última Atualização:** 19/04/2026 04:50:00
+**Última Atualização:** 19/04/2026 07:45:00

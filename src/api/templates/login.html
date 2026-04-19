@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>AERIS - Acesso Restrito</title>
+    <style>
+        body { background: #0a0a0a; color: #00ff41; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { border: 1px solid #00ff41; padding: 40px; box-shadow: 0 0 20px #00ff4133; text-align: center; border-radius: 8px; }
+        h1 { font-size: 1.5rem; margin-bottom: 20px; }
+        input { background: #1a1a1a; border: 1px solid #00ff41; color: #fff; padding: 10px; margin: 10px 0; width: 100%; border-radius: 4px; box-sizing: border-box; }
+        button { background: #00ff41; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 4px; margin-top: 10px; }
+        button:hover { background: #00cc33; }
+        .error { color: #ff4444; font-size: 0.8rem; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h1>🛡️ AERIS SYSTEM v2.8</h1>
+        <form action="/login" method="post">
+            <input type="text" name="username" placeholder="Identificação de Autoridade" required>
+            <input type="password" name="password" placeholder="Chave de Acesso" required>
+            <button type="submit">DESPERTAR NÚCLEO</button>
+        </form>
+        <p id="msg" class="error"></p>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('erro')) document.getElementById('msg').innerText = "⚠️ Acesso Negado: Credenciais Inválidas.";
+    </script>
+</body>
+</html>
