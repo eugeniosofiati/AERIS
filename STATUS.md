@@ -83,6 +83,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [ ] **[DBA] Migração Automatizada:** Script de exportação total (Dump + Estrutura + Configs) para fácil transição entre servidores/computadores.
 - [ ] **[INFRA] Disaster Recovery:** Rotina de backup automático para nuvem ou unidade externa criptografada.
 - [ ] **[DOC] Guia de Deployment Rápido:** Documentação para reconstrução total do ambiente em novo hardware com um comando único.
+- [ ] **[DEV] Higiene Sistêmica:** Implementação do protocolo de "Desinstalação Destrutiva" para purga total de Skills e tabelas obsoletas (Zero Sujeira).
 
 ---
 
@@ -102,4 +103,4 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 2. **[INFRA]** Ajustar `docker-compose.yml` para política `restart: unless-stopped`.
 3. **[DEV]** Iniciar protótipo da Skill de Agenda (Tratamento de Lacuna ID 14).
 
-**Última Atualização:** 19/04/2026 04:25:00
+**Última Atualização:** 19/04/2026 04:32:00
