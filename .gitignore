@@ -5,10 +5,12 @@ __pycache__/
 venv/
 .env
 
-# Docker/Logs
+# AERIS Data & Logs
 logs/*.log
-*.sql
+data/backups/*.sql
+data/backups/old_versions/
+!data/backups/.gitkeep
 
-# Sensível (Opcional se você for usar .env no futuro)
-# Por enquanto, como os segredos estão no docker-compose.yml, 
-# tome cuidado ao subir esse arquivo se o repo for público.
+# Docker & Binaries
+bin_host/
+.DS_Store

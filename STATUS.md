@@ -1,6 +1,6 @@
 # 🚀 PROJETO AERIS - STATUS DO DESENVOLVIMENTO (CONTROLE INTEGRAL)
 
-**Documento de Referência:** v2.5.1 (Consolidação de Fases e Inteligência Proativa)  
+**Documento de Referência:** v2.6.0 (MySQL 8.0 Pure Architecture & Backup Sovereignty)  
 **Objetivo:** Construir um ecossistema modular, seguro e expansível, centrado na autoridade do Usuário Mestre.  
 **Diretriz de Documentação:** Este arquivo deve ser mantido como uma cópia fiel e exaustiva das ações, requisitos e histórico, sem qualquer tipo de síntese ou simplificação.
 
@@ -12,7 +12,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 ### Hierarquia de Componentes:
 1. **Orquestrador:** Cérebro executivo (Saída Minimalista/Mestre).
 2. **Módulos:** Unidades lógicas de processamento (Contexto, Segurança, Auditoria).
-3. **Skills:** Interfaces de habilidades funcionais (Financeiro, Execução, etc).
+3. **Skills:** Interfaces de habilidades funcionais (Financeiro, Execução, Backup).
 4. **Sub-skills:** Unidades técnicas atômicas (Sanitização, Decodificação, SHA-256).
 
 ---
@@ -40,6 +40,7 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 
 ### [FASE 3] O AGENTE & PIPELINE DE EXECUÇÃO (O Cérebro)
 - [x] **[DEV] Skill de Execução & Sub-skill de Sanitização:** Restauração e integração base.
+- [x] **[SEC] Gatekeeper de Integridade:** Validação de Skill via Hash SHA-256 + Salt.
 - [ ] **[DEV] Pipeline de 10 Etapas:** Fluxo completo de Identificação -> Estilo -> Registro.
 
 ### [FASE 4] MELHORIAS, TELEMETRIA & MEED (Evolução)
@@ -57,17 +58,23 @@ O AERIS opera sob um modelo de **Orquestração Modular**, onde o núcleo centra
 - [x] **[DEV] Skill fatura_limite:** Gestão de metas orçamentárias persistentes.
 - [x] **[QA] Teste de Estresse:** Homologação de alerta de estouro (Saúde: 110%).
 
+### [FASE 7] SOBERANIA DE DADOS & PURIFICAÇÃO (Entrega Atual)
+- [x] **[INFRA] Purificação MySQL:** Expurgado binários MariaDB; espelhamento físico de `mysqldump` v8.0.45 do Host (Ubuntu) para o Container.
+- [x] **[SEC] Homologação de Backup:** Skill `backup` funcional com bypass de TLS (`--ssl-mode=DISABLED`).
+- [x] **[INFRA] Governança de Arquivos:** Organização de diretórios de dados e correção de permissões (User: geninho).
+
 ---
 
 ## 📑 HISTÓRICO DE ENTREGAS E VALIDAÇÕES
 * **Snapshot 1.3.9:** Estabilização de Ciclo de Vida e Redução de Restart.
 * **Snapshot 2.4.0:** A Era da Persistência (Criptografia e DB Local).
 * **Snapshot 2.5.1:** Inteligência Proativa e Refatoração de Interface.
+* **Snapshot 2.6.0:** Soberania de Dados e Purificação da Pilha MySQL 8.0.
 
 ---
 
 ## 📝 PRÓXIMA AÇÃO (BACKLOG IMEDIATO)
-1. **Modelagem de Contexto Profundo:** Expandir Fase 2 para suportar fatos não-financeiros.
-2. **Segurança:** Implementar backup criptografado do banco de dados.
+1. **[Git]** Sincronizar o estado atual v2.6.0 com o repositório remoto.
+2. **[DBA]** Modelagem de Contexto Profundo: Expandir Fase 2 para suportar fatos não-financeiros.
 
-**Última Atualização:** 19/04/2026 01:41:00
+**Última Atualização:** 19/04/2026 02:45:00
