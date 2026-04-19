@@ -3,6 +3,7 @@ import hashlib
 import mysql.connector
 import time
 import signal
+import sys
 from src.modulos.core.estilo import EstiloMódulo
 from src.modulos.core.contexto import ContextoMódulo
 from src.modulos.core.sandbox import SandboxMódulo
@@ -34,7 +35,7 @@ class OrchestratorAeris:
 
         # Iniciar Soberania
         self.carregar_soberania()
-        
+
         # Auditoria de Inicialização
         self.auditoria.registrar(self.mestre_id, 'INFO', 'SISTEMA_BOOT', 'CORE', 'Ecossistema AERIS despertou.')
 
@@ -60,7 +61,6 @@ class OrchestratorAeris:
 
             cursor.execute("SELECT chave, valor_blob FROM contexto_persistente WHERE tipo IN ('SISTEMA', 'DIRETRIZ')")
             for row in cursor.fetchall():
-                # Tenta decriptar se necessário (usando lógica do módulo contexto se disponível futuramente)
                 valor = row['valor_blob'].decode('utf-8') if isinstance(row['valor_blob'], bytes) else row['valor_blob']
                 self.contexto_sistema[row['chave']] = valor
 
@@ -74,13 +74,25 @@ class OrchestratorAeris:
             if conn: conn.close()
 
     def stop(self, signum, frame):
+        """Encerramento limpo e imediato"""
+        if not self.running:
+            return
+        
         print("\n🛑 Encerrando AERIS (Graceful Shutdown)...")
-        self.auditoria.registrar(self.mestre_id, 'AVISO', 'SISTEMA_SHUTDOWN', 'CORE', 'Encerramento solicitado via sinal.')
+        try:
+            self.auditoria.registrar(self.mestre_id, 'AVISO', 'SISTEMA_SHUTDOWN', 'CORE', 'Encerramento solicitado.')
+        except:
+            pass
+            
         self.running = False
+        # os._exit força a saída ignorando threads bloqueadas (como o input)
+        os._exit(0)
 
     def buscar_modulo_por_gatilho(self, input_bruto):
-        gatilho = input_bruto.split()[0].lower()
-        argumentos = " ".join(input_bruto.split()[1:])
+        partes = input_bruto.split()
+        if not partes: return None
+        gatilho = partes[0].lower()
+        argumentos = " ".join(partes[1:])
         try:
             conn = self.conectar_db()
             cursor = conn.cursor()
@@ -96,7 +108,7 @@ class OrchestratorAeris:
 
     def pipeline_de_execucao(self, input_bruto, usuario_id=0):
         self.auditoria.registrar(usuario_id, 'INFO', 'TENTATIVA_EXEC', 'PIPELINE', f"Input: {input_bruto}")
-        
+
         resultado_busca = self.buscar_modulo_por_gatilho(input_bruto)
         if not resultado_busca:
             self.meed.registrar_lacuna(input_bruto, usuario_id)
@@ -121,8 +133,7 @@ class OrchestratorAeris:
             modulo = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(modulo)
             skill = modulo.SkillModule(self)
-            
-            # Execução e Auditoria de Sucesso
+
             resultado = skill.executar(argumentos)
             self.auditoria.registrar(usuario_id, 'INFO', 'EXEC_SUCESSO', nome_arquivo, f"Args: {argumentos}")
             return self.estilo.formatar_saida(resultado, "MESTRE"), "SUCCESS"
@@ -132,9 +143,31 @@ class OrchestratorAeris:
 
     def run(self):
         print(f"🚀 {self.contexto_sistema.get('projeto_nome', 'AERIS')} Iniciado...")
+        
+        # Lista de termos para despedida amigável
+        termos_saida = ["tchau, aeris", "tchau aeris", "terminamos por aqui", "sair", "exit", "tchau"]
+        
         while self.running:
-            time.sleep(1)
-        print("💤 Sistema offline.")
+            try:
+                comando = input("👑 AERIS > ").strip()
+                
+                if not comando:
+                    continue
+
+                # Verificação de Despedida
+                if comando.lower() in termos_saida:
+                    print("👋 Até logo, Mestre. Encerrando sistemas...")
+                    self.stop(None, None)
+                    break
+
+                # Processamento Normal
+                resultado, status = self.pipeline_de_execucao(comando)
+                print(resultado)
+
+            except (EOFError, KeyboardInterrupt):
+                self.stop(None, None)
+            except Exception as e:
+                print(f"⚠️ Erro no loop principal: {e}")
 
 if __name__ == "__main__":
     aeris = OrchestratorAeris()
