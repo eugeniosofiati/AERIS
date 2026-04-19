@@ -7,53 +7,62 @@ class SkillModule:
 
     def executar(self, argumentos=None):
         try:
-            # 1. Buscar chaves via SQL direto
             conn = self.orchestrator.conectar_db()
             cursor = conn.cursor()
+            
+            # 1. Recuperar todos os registros financeiros e metas
             cursor.execute("SELECT chave FROM contexto_persistente WHERE chave LIKE 'fatura_%'")
             chaves = [row[0] for row in cursor.fetchall()]
             
             if not chaves:
-                return "⚠️ Nenhuma fatura encontrada."
+                return "⚠️ Nenhuma informação financeira encontrada no banco."
 
-            categorias = defaultdict(float)
+            gastos_por_cat = defaultdict(float)
+            limites_por_cat = {}
             total_geral = 0.0
-            contagem = 0
 
-            # 2. Usar o método recuperar_memoria do Core com segurança
+            # 2. Processamento de dados (Gastos vs Metas)
             for chave in chaves:
                 try:
-                    # Garantimos que a chave seja uma string limpa
-                    chave_str = str(chave).strip()
-                    conteudo = self.orchestrator.contexto.recuperar_memoria(0, chave_str)
+                    conteudo = self.orchestrator.contexto.recuperar_memoria(0, chave)
+                    if not conteudo: continue
+                    dados = json.loads(conteudo)
                     
-                    if conteudo:
-                        # Se o Core retornar bytes, decodificamos aqui
-                        if isinstance(conteudo, bytes):
-                            conteudo = conteudo.decode('utf-8')
-                        
-                        dados = json.loads(conteudo)
-                        valor = dados.get("valor", 0)
-                        cat = dados.get("categoria", "sem categoria")
-                        
-                        categorias[cat] += valor
-                        total_geral += valor
-                        contagem += 1
-                except Exception:
+                    if "valor_limite" in dados: # É uma meta
+                        limites_por_cat[dados["categoria"]] = dados["valor_limite"]
+                    elif "valor" in dados: # É um gasto real
+                        gastos_por_cat[dados["categoria"]] += dados["valor"]
+                        total_geral += dados["valor"]
+                except:
                     continue
 
-            # 3. Formatar Saída
-            saida = ["📊 RELATÓRIO CONSOLIDADO AERIS"]
-            if not categorias:
-                return "⚠️ Dados encontrados, mas não puderam ser descriptografados. Verifique o SALT."
+            # 3. Construção do Painel Visual
+            saida = ["📊 PAINEL DE CONTROLE FINANCEIRO AERIS"]
+            saida.append("-" * 40)
+            
+            for cat, gasto in gastos_por_cat.items():
+                limite = limites_por_cat.get(cat, 0.0)
+                indicador = "⚪" # Sem meta definida
+                info_limite = ""
                 
-            for cat, total in categorias.items():
-                saida.append(f"  • {cat.capitalize()}: R$ {total:.2f}")
+                if limite > 0:
+                    percent = (gasto / limite) * 100
+                    info_limite = f" / R$ {limite:.2f} ({percent:.1f}%)"
+                    
+                    if percent < 70: indicador = "🟢"
+                    elif percent < 100: indicador = "🟡"
+                    else: indicador = "🔴"
+
+                saida.append(f" {indicador} {cat.capitalize()}: R$ {gasto:.2f}{info_limite}")
             
-            saida.append("-" * 35)
-            saida.append(f"💰 TOTAL ({contagem} itens): R$ {total_geral:.2f}")
+            saida.append("-" * 40)
+            saida.append(f"💰 TOTAL ACUMULADO: R$ {total_geral:.2f}")
             
+            # Alerta Geral
+            if any(gastos_por_cat[c] > limites_por_cat.get(c, 999999) for c in gastos_por_cat):
+                saida.append("\n⚠️ ATENÇÃO: Você ultrapassou o teto em algumas categorias!")
+
             return "\n".join(saida)
             
         except Exception as e:
-            return f"❌ Erro Crítico no Relatório: {str(e)}"
+            return f"❌ Erro no Processamento de Inteligência: {str(e)}"
